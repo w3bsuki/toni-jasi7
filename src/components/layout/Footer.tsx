@@ -59,10 +59,10 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <section className="bg-black py-16 text-white md:py-20">
+    <section className="bg-black py-16 text-white md:py-20 dark:bg-black">
       <div className="container mx-auto px-4">
         <footer className="flex flex-col items-center">
-          <div className="mb-12 rounded-sm bg-white/5 p-8 backdrop-blur-sm md:p-12 w-full max-w-6xl mx-auto">
+          <div className="mb-12 rounded-sm bg-white/5 p-8 backdrop-blur-sm md:p-12 w-full max-w-6xl mx-auto dark:bg-[#171717]/40">
             <div className="flex flex-col items-center text-center">
               <h2 className="max-w-[800px] text-3xl leading-tight font-bold tracking-wider uppercase text-balance md:text-4xl">
                 Join the NoCAP Club
@@ -75,7 +75,7 @@ export function Footer() {
                 Get exclusive access to limited edition drops, early releases, and member-only perks.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <Button asChild variant="outline" size="lg" className="group border-white bg-white text-black hover:bg-black hover:text-white">
+                <Button asChild variant="outline" size="lg" className="group border-white bg-white text-black hover:bg-black hover:text-white dark:bg-[#171717] dark:text-white dark:hover:bg-white dark:hover:text-black">
                   <Link href="/membership" className="flex items-center gap-2">
                     Join the Club
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -99,12 +99,12 @@ export function Footer() {
                   <Input
                     type="email"
                     placeholder="Your email address"
-                    className="h-12 border-white/20 bg-white/10 text-white placeholder:text-white/50"
+                    className="h-12 border-white/20 bg-white/10 text-white placeholder:text-white/50 dark:border-white/20 dark:bg-[#171717]/50"
                   />
                 </div>
                 <Button 
                   type="submit" 
-                  className="h-12 px-6 bg-white text-black border border-white hover:bg-black hover:text-white hover:border-white"
+                  className="h-12 px-6 bg-white text-black border border-white hover:bg-black hover:text-white hover:border-white dark:bg-[#171717] dark:text-white dark:hover:bg-white dark:hover:text-black"
                 >
                   Subscribe
                 </Button>

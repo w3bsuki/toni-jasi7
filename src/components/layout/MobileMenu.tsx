@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 interface NavItem {
   label: string;
@@ -30,22 +31,25 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-white">
-      <div className="flex justify-between items-center p-4 border-b border-gray-200">
+    <div className="fixed inset-0 z-50 bg-white dark:bg-[#0a0a0a] dark:text-white">
+      <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-[#171717]">
         <h2 className="text-xl font-bold">Menu</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-700 hover:text-black"
-          aria-label="Close menu"
-        >
-          <X size={24} />
-        </button>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <button
+            onClick={onClose}
+            className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
+            aria-label="Close menu"
+          >
+            <X size={24} />
+          </button>
+        </div>
       </div>
 
       <nav className="p-4">
         <ul className="space-y-4">
           {navItems.map((item) => (
-            <li key={item.label} className="border-b border-gray-100 pb-2">
+            <li key={item.label} className="border-b border-gray-100 dark:border-[#171717] pb-2">
               {item.children ? (
                 <div>
                   <button
@@ -65,7 +69,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                         <li key={child.label}>
                           <Link
                             href={child.href}
-                            className="block py-2 text-gray-700 hover:text-black"
+                            className="block py-2 text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
                             onClick={onClose}
                           >
                             {child.label}
@@ -78,7 +82,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
               ) : (
                 <Link
                   href={item.href}
-                  className="block py-2 text-lg text-gray-700 hover:text-black"
+                  className="block py-2 text-lg text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
                   onClick={onClose}
                 >
                   {item.label}
@@ -96,7 +100,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
               <Button 
                 variant="outline" 
                 size="sm"
-                className="border-black bg-black text-white hover:bg-white hover:text-black w-full font-medium py-2 text-base rounded-none"
+                className="border-black bg-black text-white hover:bg-white hover:text-black w-full font-medium py-2 text-base rounded-none dark:bg-[#171717] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black"
               >
                 SHOP NOW
               </Button>
