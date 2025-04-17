@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hat Store E-commerce
+
+A modern e-commerce website for selling hats, built with Next.js, React, TypeScript, Tailwind CSS, and Shadcn/UI.
+
+## Features
+
+- **Modern Design**: Clean black and white design with focus on product display
+- **Responsive Layout**: Works seamlessly on all devices from mobile to desktop
+- **Product Browsing**: Browse products by collection or featured items
+- **Product Details**: View detailed product information, select size, and add to cart
+- **Shopping Cart**: Simple cart management with quantity adjustment
+- **Collection Pages**: View products organized by collections
+
+## Technologies Used
+
+- **Next.js 14**: Utilizing the App Router for optimized page rendering and routing
+- **React 18**: For building interactive user interfaces
+- **TypeScript**: For type-safe code and better developer experience
+- **Tailwind CSS**: For utility-first styling
+- **Shadcn/UI**: For accessible and customizable UI components
+- **PNPM**: Fast, disk space efficient package manager
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18.17 or later
+- pnpm
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/hat-store.git
+   cd hat-store
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+3. Run the development server:
+   ```bash
+   pnpm dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Project Structure
+
+```
+hat-store/
+├── src/
+│   ├── app/                    # App Router pages and layouts
+│   │   ├── layout/             # Layout components (Navbar, Footer, etc.)
+│   │   ├── home/               # Home page components
+│   │   ├── product/            # Product components
+│   │   ├── cart/               # Cart components
+│   │   └── ui/                 # Reusable UI components
+│   ├── data/                   # Mock data for development
+│   ├── hooks/                  # Custom React hooks
+│   ├── lib/                    # Utility functions
+│   └── types/                  # TypeScript types
+└── public/                     # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Home**: Features hero banner, featured collections, and product grids
+- **Collections**: Browse all available collections
+- **Collection Detail**: View products in a specific collection
+- **Product Detail**: View product information and options
+- **Cart**: Manage items in the shopping cart
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Future Enhancements
 
-## Learn More
+- User authentication
+- Wishlist functionality
+- Product reviews
+- Advanced filtering and search
+- Payment processing integration
+- Admin dashboard for product management
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+MIT
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Credits
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Images from [Unsplash](https://unsplash.com/)
