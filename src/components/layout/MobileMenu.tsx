@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { X, ChevronDown, ChevronUp } from "lucide-react";
+import { X, ChevronDown, Search, ShoppingBag } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 
@@ -28,86 +29,171 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
     setExpandedItem(expandedItem === label ? null : label);
   };
 
+  // Animation variants
+  const menuVariants = {
+    closed: {
+      opacity: 0,
+      x: "100%",
+      transition: {
+        duration: 0.3,
+        ease: [0.22, 1, 0.36, 1],
+      }
+    },
+    open: {
+      opacity: 1,
+      x: "0%",
+      transition: {
+        duration: 0.4,
+        ease: [0.22, 1, 0.36, 1],
+      }
+    }
+  };
+
+  const backdrop = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 }
+  };
+
+  const slideDown = {
+    hidden: { opacity: 0, height: 0 },
+    visible: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        duration: 0.3,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-white dark:bg-[#0a0a0a] dark:text-white">
-      <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-[#171717]">
-        <h2 className="text-xl font-bold">Menu</h2>
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
+    <div className="fixed inset-0 z-50 flex">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        variants={backdrop}
+        className="absolute inset-0 bg-black/20 backdrop-blur-sm dark:bg-black/50"
+        onClick={onClose}
+      />
+      
+      <motion.div
+        initial="closed"
+        animate="open"
+        exit="closed"
+        variants={menuVariants}
+        className="relative w-full max-w-sm ml-auto h-full bg-white overflow-auto flex flex-col dark:bg-[#0a0a0a] dark:text-white shadow-xl"
+      >
+        <div className="sticky top-0 z-20 flex justify-between items-center p-4 border-b border-gray-200 dark:border-[#171717] bg-white dark:bg-[#0a0a0a]">
+          <h2 className="text-xl font-bold">Menu</h2>
           <button
             onClick={onClose}
-            className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
+            className="p-2 -mr-2 text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-[#171717] transition-colors"
             aria-label="Close menu"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
-      </div>
 
-      <nav className="p-4">
-        <ul className="space-y-4">
-          {navItems.map((item) => (
-            <li key={item.label} className="border-b border-gray-100 dark:border-[#171717] pb-2">
-              {item.children ? (
-                <div>
-                  <button
-                    onClick={() => toggleItem(item.label)}
-                    className="flex items-center justify-between w-full py-2"
+        <div className="flex items-center gap-4 px-4 py-3 border-b border-gray-200 dark:border-[#171717]">
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <Search size={16} className="text-gray-400" />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Search..." 
+              className="w-full pl-10 pr-3 py-2 text-sm bg-gray-100 dark:bg-[#171717] rounded-md border-none focus:ring-1 focus:ring-black dark:focus:ring-white" 
+            />
+          </div>
+          <ThemeToggle />
+        </div>
+
+        <nav className="flex-1 overflow-auto">
+          <ul className="divide-y divide-gray-100 dark:divide-[#171717]">
+            {navItems.map((item) => (
+              <li key={item.label} className="px-4">
+                {item.children ? (
+                  <div>
+                    <button
+                      onClick={() => toggleItem(item.label)}
+                      className="flex items-center justify-between w-full py-4 font-medium"
+                    >
+                      <span className="text-base">{item.label}</span>
+                      <ChevronDown 
+                        size={18} 
+                        className={`transition-transform duration-300 ${expandedItem === item.label ? "rotate-180" : ""}`} 
+                      />
+                    </button>
+                    <AnimatePresence>
+                      {expandedItem === item.label && (
+                        <motion.ul
+                          initial="hidden"
+                          animate="visible"
+                          exit="hidden"
+                          variants={slideDown}
+                          className="overflow-hidden"
+                        >
+                          <div className="pl-4 pb-4 border-l border-gray-100 dark:border-[#262626] ml-2.5 space-y-3">
+                            {item.children.map((child) => (
+                              <li key={child.label}>
+                                <Link
+                                  href={child.href}
+                                  className="block py-1.5 text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors"
+                                  onClick={onClose}
+                                >
+                                  {child.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </div>
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="block py-4 text-base font-medium text-gray-800 hover:text-black dark:text-gray-200 dark:hover:text-white transition-colors"
+                    onClick={onClose}
                   >
-                    <span className="text-lg">{item.label}</span>
-                    {expandedItem === item.label ? (
-                      <ChevronUp size={20} />
-                    ) : (
-                      <ChevronDown size={20} />
-                    )}
-                  </button>
-                  {expandedItem === item.label && (
-                    <ul className="ml-4 mt-2 space-y-2">
-                      {item.children.map((child) => (
-                        <li key={child.label}>
-                          <Link
-                            href={child.href}
-                            className="block py-2 text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
-                            onClick={onClose}
-                          >
-                            {child.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  href={item.href}
-                  className="block py-2 text-lg text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
-                  onClick={onClose}
-                >
-                  {item.label}
-                </Link>
-              )}
-            </li>
-          ))}
-          
-          <li className="pt-4">
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+        
+        <div className="sticky bottom-0 p-4 pt-2 border-t border-gray-200 dark:border-[#171717] bg-white dark:bg-[#0a0a0a] mt-auto">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <Link 
-              href="/collections" 
+              href="/cart" 
               onClick={onClose}
-              className="block w-full"
+              className="flex items-center justify-center py-2.5 px-4 bg-gray-100 dark:bg-[#171717] rounded-md font-medium text-sm transition-colors hover:bg-gray-200 dark:hover:bg-[#262626]"
             >
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="border-black bg-black text-white hover:bg-white hover:text-black w-full font-medium py-2 text-base rounded-none dark:bg-[#171717] dark:text-white dark:border-white dark:hover:bg-white dark:hover:text-black"
-              >
-                SHOP NOW
-              </Button>
+              <ShoppingBag size={16} className="mr-2" />
+              Cart (0)
             </Link>
-          </li>
-        </ul>
-      </nav>
+            <ThemeToggle />
+          </div>
+          <Link 
+            href="/collections" 
+            onClick={onClose}
+            className="block w-full"
+          >
+            <Button 
+              variant="outline" 
+              size="default"
+              className="border-black bg-black text-white hover:bg-white hover:text-black w-full font-medium rounded-md dark:bg-white dark:text-black dark:border-white dark:hover:bg-[#171717] dark:hover:text-white transition-colors"
+            >
+              SHOP NOW
+            </Button>
+          </Link>
+        </div>
+      </motion.div>
     </div>
   );
 }

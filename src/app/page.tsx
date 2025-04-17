@@ -16,15 +16,15 @@ export default function Home() {
 
   return (
     <>
-      <div className="mb-0">
-        <Hero
-          title="Premium Hat Collection"
-          subtitle="Elevate your style with our exclusive hat collection"
-          ctaText="Shop Now"
-          ctaLink="/collections"
-          imageSrc="https://images.unsplash.com/photo-1556306535-0f09a537f0a3?q=80&w=1920&auto=format&fit=crop"
-        />
-      </div>
+      <Hero
+        title="Redefine Your Style"
+        subtitle="Discover our premium hat collection crafted with exceptional quality materials and attention to detail."
+        ctaText="Shop Now"
+        ctaLink="/collections"
+        secondaryCtaText="View Lookbook"
+        secondaryCtaLink="/lookbook"
+        imageSrc="https://images.unsplash.com/photo-1517941823-815bea90d291?q=80&w=1920&auto=format&fit=crop"
+      />
       
       <SignupCarousel />
       
