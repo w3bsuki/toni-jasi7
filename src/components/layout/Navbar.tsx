@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, Search, ShoppingBag, ChevronDown } from "lucide-react";
+import { Menu, Search, ShoppingBag, ChevronDown, Instagram } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MobileMenu from "./MobileMenu";
 import { Button } from "@/components/ui/button";
@@ -80,18 +80,51 @@ export function Navbar() {
 
   return (
     <header 
-      className={`sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm dark:bg-[#0a0a0a] dark:border-[#171717] transition-all duration-200 ${
+      className={`sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm dark:bg-black dark:border-zinc-800 transition-all duration-200 ${
         scrolled ? "shadow-md" : ""
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="w-full px-6 md:px-8">
         <div className={`flex items-center justify-between transition-all duration-200 ${
           scrolled ? "h-14" : "h-16"
         }`}>
-          {/* Logo */}
-          <Link href="/" className="text-2xl font-bold tracking-tight dark:text-white transition-all duration-200">
-            NoCapLLC
-          </Link>
+          {/* Logo and Social Media */}
+          <div className="flex items-center">
+            <Link href="/" className="text-2xl font-bold tracking-tight dark:text-white transition-all duration-200 mr-4">
+              NoCapLLC
+            </Link>
+            
+            {/* Social Media Links */}
+            <div className="hidden md:flex items-center space-x-4">
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-700 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-900"
+                aria-label="Instagram"
+              >
+                <Instagram size={16} strokeWidth={2} />
+              </a>
+              <a 
+                href="https://tiktok.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-700 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-zinc-900"
+                aria-label="TikTok"
+              >
+                <svg 
+                  width="16" 
+                  height="16" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="fill-current"
+                >
+                  <path d="M19.321 5.562a5.122 5.122 0 0 1-3.664-1.514 5.12 5.12 0 0 1-1.514-3.664h-3.844v12.926c0 1.614-1.312 2.926-2.926 2.926a2.927 2.927 0 0 1-2.927-2.926 2.927 2.927 0 0 1 2.927-2.927c.323 0 .634.052.926.149V6.488a6.963 6.963 0 0 0-.926-.062C3.736 6.426 0 10.163 0 14.8c0 4.636 3.736 8.373 8.373 8.373 4.638 0 8.374-3.737 8.374-8.373V9.146a9.064 9.064 0 0 0 5.316 1.703v-3.844c-.94 0-1.84-.149-2.742-.443z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -105,7 +138,7 @@ export function Navbar() {
                 <div className="group inline-flex items-center">
                   <Link
                     href={item.href}
-                    className="text-gray-800 inline-flex items-center font-medium hover:text-black transition-colors py-2 dark:text-gray-200 dark:hover:text-white"
+                    className="text-gray-800 inline-flex items-center font-medium hover:text-black transition-colors py-2 dark:text-gray-200 dark:hover:text-white uppercase tracking-wide text-sm"
                   >
                     {item.label}
                     {item.children && (
@@ -130,14 +163,14 @@ export function Navbar() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg overflow-hidden dark:bg-[#171717] border border-gray-100 dark:border-[#262626]"
+                      className="absolute top-full left-0 mt-1 w-56 bg-white shadow-lg overflow-hidden dark:bg-black border border-gray-100 dark:border-zinc-800"
                     >
                       <div className="py-2">
                         {item.children.map((child) => (
                           <Link
                             key={child.label}
                             href={child.href}
-                            className="block px-4 py-2.5 text-sm text-gray-800 hover:bg-gray-50 font-medium dark:text-gray-200 dark:hover:bg-[#262626] transition-colors"
+                            className="block px-4 py-2.5 text-sm text-gray-800 hover:bg-gray-50 font-medium dark:text-gray-200 dark:hover:bg-zinc-900 transition-colors"
                           >
                             {child.label}
                           </Link>
@@ -164,7 +197,7 @@ export function Navbar() {
                   <input
                     type="text"
                     placeholder="Search products..."
-                    className="w-full pl-10 pr-4 py-1.5 rounded-full border border-gray-200 dark:border-[#262626] dark:bg-[#171717] text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+                    className="w-full pl-10 pr-4 py-1.5 border border-gray-200 dark:border-zinc-800 dark:bg-black text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
                     autoFocus
                     onBlur={() => setSearchOpen(false)}
                   />
@@ -175,7 +208,7 @@ export function Navbar() {
                 </motion.div>
               ) : (
                 <button
-                  className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-[#171717]"
+                  className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900"
                   aria-label="Search"
                   onClick={() => setSearchOpen(true)}
                 >
@@ -190,7 +223,7 @@ export function Navbar() {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="border-black bg-black text-white hover:bg-white hover:text-black min-w-16 font-medium dark:bg-white dark:text-black dark:border-white dark:hover:bg-black dark:hover:text-white transition-colors"
+                className="border-black bg-black text-white hover:bg-white hover:text-black min-w-20 h-9 font-bold tracking-wider text-xs uppercase dark:bg-white dark:text-black dark:border-white dark:hover:bg-black dark:hover:text-white transition-colors rounded-none"
               >
                 SHOP
               </Button>
@@ -198,16 +231,16 @@ export function Navbar() {
             
             <Link 
               href="/cart" 
-              className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors relative p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-[#171717]"
+              className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors relative p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900"
             >
               <ShoppingBag size={20} />
-              <span className="absolute -top-1 -right-1 bg-black text-white dark:bg-white dark:text-black text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-black text-white dark:bg-white dark:text-black text-xs font-bold h-4 w-4 flex items-center justify-center">
                 0
               </span>
             </Link>
             
             <button
-              className="md:hidden text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-[#171717]"
+              className="md:hidden text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open menu"
             >
@@ -224,14 +257,14 @@ export function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden overflow-hidden border-t border-gray-200 dark:border-[#171717]"
+            className="md:hidden overflow-hidden border-t border-gray-200 dark:border-zinc-800"
           >
-            <div className="container mx-auto px-4 py-3">
-              <div className="relative">
+            <div className="w-full px-6">
+              <div className="relative py-3">
                 <input
                   type="text"
                   placeholder="Search products..."
-                  className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-200 dark:border-[#262626] dark:bg-[#171717] text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-800 dark:bg-black text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
                   autoFocus
                   onBlur={() => setSearchOpen(false)}
                 />

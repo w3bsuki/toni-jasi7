@@ -84,20 +84,20 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
         animate="open"
         exit="closed"
         variants={menuVariants}
-        className="relative w-full max-w-sm ml-auto h-full bg-white overflow-auto flex flex-col dark:bg-[#0a0a0a] dark:text-white shadow-xl"
+        className="relative w-full max-w-sm ml-auto h-full bg-white overflow-auto flex flex-col dark:bg-black dark:text-white shadow-xl"
       >
-        <div className="sticky top-0 z-20 flex justify-between items-center p-4 border-b border-gray-200 dark:border-[#171717] bg-white dark:bg-[#0a0a0a]">
+        <div className="sticky top-0 z-20 flex justify-between items-center p-4 border-b border-gray-200 dark:border-zinc-800 bg-white dark:bg-black">
           <h2 className="text-xl font-bold">Menu</h2>
           <button
             onClick={onClose}
-            className="p-2 -mr-2 text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-[#171717] transition-colors"
+            className="p-2 -mr-2 text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-900 transition-colors"
             aria-label="Close menu"
           >
             <X size={20} />
           </button>
         </div>
 
-        <div className="flex items-center gap-4 px-4 py-3 border-b border-gray-200 dark:border-[#171717]">
+        <div className="flex items-center gap-4 px-4 py-3 border-b border-gray-200 dark:border-zinc-800">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <Search size={16} className="text-gray-400" />
@@ -105,14 +105,14 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
             <input 
               type="text" 
               placeholder="Search..." 
-              className="w-full pl-10 pr-3 py-2 text-sm bg-gray-100 dark:bg-[#171717] rounded-md border-none focus:ring-1 focus:ring-black dark:focus:ring-white" 
+              className="w-full pl-10 pr-3 py-2 text-sm bg-gray-100 dark:bg-zinc-900 border-none focus:ring-1 focus:ring-black dark:focus:ring-white" 
             />
           </div>
           <ThemeToggle />
         </div>
 
         <nav className="flex-1 overflow-auto">
-          <ul className="divide-y divide-gray-100 dark:divide-[#171717]">
+          <ul className="divide-y divide-gray-100 dark:divide-zinc-800">
             {navItems.map((item) => (
               <li key={item.label} className="px-4">
                 {item.children ? (
@@ -121,7 +121,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                       onClick={() => toggleItem(item.label)}
                       className="flex items-center justify-between w-full py-4 font-medium"
                     >
-                      <span className="text-base">{item.label}</span>
+                      <span className="text-base uppercase tracking-wide text-sm">{item.label}</span>
                       <ChevronDown 
                         size={18} 
                         className={`transition-transform duration-300 ${expandedItem === item.label ? "rotate-180" : ""}`} 
@@ -136,7 +136,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                           variants={slideDown}
                           className="overflow-hidden"
                         >
-                          <div className="pl-4 pb-4 border-l border-gray-100 dark:border-[#262626] ml-2.5 space-y-3">
+                          <div className="pl-4 pb-4 border-l border-gray-100 dark:border-zinc-800 ml-2.5 space-y-3">
                             {item.children.map((child) => (
                               <li key={child.label}>
                                 <Link
@@ -156,7 +156,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                 ) : (
                   <Link
                     href={item.href}
-                    className="block py-4 text-base font-medium text-gray-800 hover:text-black dark:text-gray-200 dark:hover:text-white transition-colors"
+                    className="block py-4 text-base font-medium text-gray-800 hover:text-black dark:text-gray-200 dark:hover:text-white transition-colors uppercase tracking-wide text-sm"
                     onClick={onClose}
                   >
                     {item.label}
@@ -167,12 +167,12 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
           </ul>
         </nav>
         
-        <div className="sticky bottom-0 p-4 pt-2 border-t border-gray-200 dark:border-[#171717] bg-white dark:bg-[#0a0a0a] mt-auto">
+        <div className="sticky bottom-0 p-4 pt-2 border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-black mt-auto">
           <div className="grid grid-cols-2 gap-3 mb-4">
             <Link 
               href="/cart" 
               onClick={onClose}
-              className="flex items-center justify-center py-2.5 px-4 bg-gray-100 dark:bg-[#171717] rounded-md font-medium text-sm transition-colors hover:bg-gray-200 dark:hover:bg-[#262626]"
+              className="flex items-center justify-center py-2.5 px-4 bg-gray-100 dark:bg-zinc-900 font-medium text-sm transition-colors hover:bg-gray-200 dark:hover:bg-zinc-800"
             >
               <ShoppingBag size={16} className="mr-2" />
               Cart (0)
@@ -187,7 +187,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
             <Button 
               variant="outline" 
               size="default"
-              className="border-black bg-black text-white hover:bg-white hover:text-black w-full font-medium rounded-md dark:bg-white dark:text-black dark:border-white dark:hover:bg-[#171717] dark:hover:text-white transition-colors"
+              className="border-black bg-black text-white hover:bg-white hover:text-black w-full font-bold text-xs uppercase tracking-wider dark:bg-white dark:text-black dark:border-white dark:hover:bg-black dark:hover:text-white transition-colors rounded-none"
             >
               SHOP NOW
             </Button>

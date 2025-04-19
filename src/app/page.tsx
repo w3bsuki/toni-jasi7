@@ -1,51 +1,37 @@
-import Hero from "@/components/home/Hero";
-import SignupCarousel from "@/components/home/SignupCarousel";
-import FeaturedCollections from "@/components/home/FeaturedCollections";
-import Newsletter from "@/components/home/Newsletter";
-import RibbonLogos from "@/components/home/RibbonLogos";
-import InfiniteMovingCards from "@/components/home/InfiniteMovingCards";
-import { collections } from "@/data/collections";
-import { products } from "@/data/products";
+import { Suspense } from 'react';
+import { Hero } from '@/components/home/Hero';
+import { SignupCarousel } from '@/components/home/SignupCarousel';
+import { FeaturedCollections } from '@/components/home/FeaturedCollections';
+import TrendingCarousel from '@/components/home/TrendingCarousel';
+import { Collection, Product } from '@/lib/types';
+import { getFeaturedCollections, getTrendingProducts } from '@/lib/api';
 
-export default function Home() {
-  // Get featured collections (first 3)
-  const featuredCollections = collections.slice(0, 3);
-  
-  // Get trending products for infinite cards (get more products to make the carousel more interesting)
-  const trendingProducts = products.slice(0, 10);
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
+export default async function Home() {
+  const collections = await getFeaturedCollections();
+  const trendingProducts = await getTrendingProducts();
 
   return (
-    <>
-      <Hero
-        title="Redefine Your Style"
+    <div className="flex flex-col min-h-screen">
+      {/* Full-width Hero section */}
+      <Hero 
+        title="Redefine Your Style" 
         subtitle="Discover our premium hat collection crafted with exceptional quality materials and attention to detail."
         ctaText="Shop Now"
         ctaLink="/collections"
-        secondaryCtaText="View Lookbook"
-        secondaryCtaLink="/lookbook"
-        imageSrc="https://images.unsplash.com/photo-1517941823-815bea90d291?q=80&w=1920&auto=format&fit=crop"
+        imageUrl="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3"
       />
       
+      {/* Full-width SignupCarousel directly below Hero */}
       <SignupCarousel />
       
-      <FeaturedCollections
-        collections={featuredCollections}
-      />
+      {/* Full-width FeaturedCollections */}
+      <FeaturedCollections collections={collections} />
       
-      <RibbonLogos />
-      
-      <InfiniteMovingCards
-        items={trendingProducts}
-        speed="slow"
-        pauseOnHover={true}
-        title="Trending Now"
-        subtitle="Our most popular styles this season"
-      />
-      
-      <Newsletter
-        title="Join Our Newsletter"
-        subtitle="Subscribe for exclusive offers, new arrivals, and style tips"
-      />
-    </>
+      {/* Full-width TrendingCarousel below FeaturedCollections */}
+      <TrendingCarousel products={trendingProducts} />
+    </div>
   );
 }

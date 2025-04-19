@@ -40,7 +40,9 @@ export function FeaturedCollections({
       title: "MENS",
       description: "Stylish and modern hats for men",
       href: `/collections/${collections[0]?.slug || "mens"}`,
-      image: collections[0]?.image || "https://images.unsplash.com/photo-1552068751-34cb5cf055b3?q=80&w=1920&auto=format&fit=crop",
+      bgColor: "bg-blue-900",
+      pattern: "bg-gradient-to-br from-blue-800/80 to-blue-950",
+      emoji: "👒",
       badge1: "NEW ARRIVALS",
       badge2: "BESTSELLERS",
     },
@@ -49,7 +51,9 @@ export function FeaturedCollections({
       title: "WOMENS",
       description: "Elegant and trendy hats for women",
       href: `/collections/${collections[1]?.slug || "womens"}`,
-      image: collections[1]?.image || "https://images.unsplash.com/photo-1555619662-99c62a36e8ca?q=80&w=1920&auto=format&fit=crop",
+      bgColor: "bg-rose-900",
+      pattern: "bg-gradient-to-br from-rose-800/80 to-rose-950",
+      emoji: "🎩",
       badge1: "TRENDING",
       badge2: "LIMITED EDITION",
     },
@@ -58,88 +62,61 @@ export function FeaturedCollections({
       title: "ACCESSORIES",
       description: "Complete your look with perfect accessories",
       href: `/collections/${collections[2]?.slug || "accessories"}`,
-      image: collections[2]?.image || "https://images.unsplash.com/photo-1593476087123-36d1de271f08?q=80&w=1920&auto=format&fit=crop",
+      bgColor: "bg-amber-900",
+      pattern: "bg-gradient-to-br from-amber-800/80 to-amber-950",
+      emoji: "🧢",
       badge1: "SPECIAL OFFER",
       badge2: "HANDCRAFTED",
     },
   ];
 
   return (
-    <section className="py-16 w-full bg-white dark:bg-[#0a0a0a] overflow-hidden">
-      <div className="container mb-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4"
-        >
-          {title && (
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight text-black dark:text-white">{title || "Featured Collections"}</h2>
-              <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-xl">Discover our curated hat collections designed for every style and occasion.</p>
-            </div>
-          )}
-          <Link href="/collections" className="group inline-flex items-center gap-1 text-black dark:text-white text-sm font-medium hover:underline">
-            View All Collections
-            <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
-        </motion.div>
-      </div>
-
-      <div className="flex flex-col gap-5 lg:aspect-[1336/460] lg:flex-row w-full">
-        <AnimatePresence>
-          {data.map((item) => (
+    <section className="w-full bg-white dark:bg-[#0a0a0a] overflow-hidden">
+      <div className="flex flex-col lg:flex-row w-full lg:aspect-[1336/460] relative">
+        {data.map((item, index) => (
+          <React.Fragment key={item.id}>
             <motion.div
-              key={item.id}
               data-state={selection === item.id ? "open" : "closed"}
-              className='group relative max-lg:w-full max-lg:flex-1 max-md:h-[280px] md:max-lg:aspect-[1336/420] rounded-xl overflow-hidden'
+              className='group relative max-lg:w-full max-lg:flex-1 max-md:h-[280px] md:max-lg:aspect-[1336/420] overflow-hidden'
               onMouseEnter={() => {
                 setSelection(item.id);
               }}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0 }}
               animate={{ 
                 opacity: 1,
-                y: 0,
                 width: selection === item.id ? "60%" : "20%"
               }}
               transition={{ 
-                duration: 0.7, 
+                duration: 0.5, 
                 ease: [0.22, 1, 0.36, 1],
-                width: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-                opacity: { duration: 0.7 },
-                y: { duration: 0.7 }
-              }}
-              whileHover={{ 
-                boxShadow: "0 15px 40px rgba(0,0,0,0.2)" 
+                width: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+                opacity: { duration: 0.3 }
               }}
             >
               <Link
                 href={item.href}
                 className="relative block h-full w-full overflow-hidden bg-black text-white"
               >
-                <motion.div 
-                  className='absolute inset-0 h-full w-full'
-                  initial={{ scale: 1.05 }}
-                  animate={{ 
-                    scale: selection === item.id ? 1 : 1.05,
-                    filter: selection === item.id ? "blur(0px)" : "blur(2px)"
-                  }}
-                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
-                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                {/* Stylized background with pattern */}
+                <div className={`absolute inset-0 ${item.bgColor} ${item.pattern}`}>
+                  {/* Background pattern */}
+                  <div className="absolute inset-0 opacity-10" 
+                    style={{ 
+                      backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.2\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                      backgroundSize: '60px 60px'
+                    }} 
                   />
-                  <div className="absolute inset-0 bg-black/40 mix-blend-multiply group-hover:bg-black/30 transition-all duration-500" />
-                  <div className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-black via-black/50 to-transparent" />
-                </motion.div>
+                </div>
+                
+                {/* Large emoji watermark */}
+                <div className="absolute -right-16 -bottom-16 text-white/10 text-[300px] pointer-events-none">
+                  {item.emoji}
+                </div>
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                 
                 <div className="absolute inset-0 flex flex-col justify-between p-6 md:p-8">
-                  <div className='flex items-center gap-2 transition-opacity delay-200 duration-500'>
+                  <div className='flex items-center gap-2 transition-opacity duration-300'>
                     <Badge variant="outline" className="bg-white/10 text-white border-white/20 backdrop-blur-sm">
                       {item.badge1}
                     </Badge>
@@ -151,12 +128,12 @@ export function FeaturedCollections({
                   <div className="z-10">
                     <motion.h3 
                       className="block text-white text-4xl font-bold tracking-wider mb-2 md:mb-4"
-                      initial={{ y: 20, opacity: 0 }}
+                      initial={{ y: 10, opacity: 0 }}
                       animate={{ 
                         y: 0, 
                         opacity: selection === item.id ? 1 : 0.7
                       }}
-                      transition={{ duration: 0.5, delay: 0.1 }}
+                      transition={{ duration: 0.3 }}
                     >
                       {item.title}
                     </motion.h3>
@@ -171,18 +148,18 @@ export function FeaturedCollections({
                     
                     <motion.div 
                       className="flex items-center justify-between gap-2"
-                      initial={{ y: 10, opacity: 0 }}
+                      initial={{ y: 5, opacity: 0 }}
                       animate={{ 
                         y: 0, 
                         opacity: selection === item.id ? 1 : 0.7 
                       }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
+                      transition={{ duration: 0.3 }}
                     >
                       <div className="text-base font-medium lg:text-lg text-white">
                         Shop Collection
                       </div>
                       <motion.div 
-                        className="flex size-10 items-center justify-center bg-white text-black rounded-full group-hover:scale-110 transition-transform"
+                        className="flex size-10 items-center justify-center bg-white text-black group-hover:scale-110 transition-transform duration-300"
                         whileHover={{ 
                           x: 5, 
                           y: -5,
@@ -197,19 +174,29 @@ export function FeaturedCollections({
                 
                 {selection === item.id && (
                   <motion.div 
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex size-16 items-center justify-center bg-white rounded-full"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex size-16 items-center justify-center bg-white"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
+                    transition={{ duration: 0.2 }}
                   >
                     <Plus className="size-8 text-black" />
                   </motion.div>
                 )}
               </Link>
+              
+              {/* Vertical separator line */}
+              {index < data.length - 1 && (
+                <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-[1px] bg-white/10 z-10" />
+              )}
             </motion.div>
-          ))}
-        </AnimatePresence>
+            
+            {/* Mobile separator for non-desktop */}
+            {index < data.length - 1 && (
+              <div className="lg:hidden h-[1px] w-full bg-white/10" />
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </section>
   );

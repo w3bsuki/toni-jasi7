@@ -4,163 +4,203 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShoppingBag, Sparkles, Star, TrendingUp } from "lucide-react";
+import SignupCarousel from "./SignupCarousel";
+import { Button } from "@/components/ui/button";
 
 interface HeroProps {
   title: string;
   subtitle: string;
   ctaText: string;
   ctaLink: string;
-  imageSrc: string;
-  secondaryCtaText?: string;
-  secondaryCtaLink?: string;
+  imageUrl: string;
 }
 
 export function Hero({
-  title,
-  subtitle,
-  ctaText,
-  ctaLink,
-  imageSrc,
-  secondaryCtaText = "Explore Collection",
-  secondaryCtaLink = "/collections",
+  title = "Premium Hat Collection",
+  subtitle = "Discover our premium hat collection crafted with exceptional quality materials and attention to detail.",
+  ctaText = "Shop Now",
+  ctaLink = "/collections",
+  imageUrl = "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3"
 }: HeroProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
-  // Split the title into an array of words
-  const titleWords = title.split(" ");
-
   return (
-    <section className="relative overflow-hidden bg-white dark:bg-[#0a0a0a]">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[90vh]">
-        {/* Left Content Area */}
-        <div className="relative z-10 flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto w-full max-w-xl lg:mx-0">
+    <section className="w-full relative overflow-hidden">
+      <div className="absolute inset-0 bg-pattern opacity-5 dark:opacity-[0.03] z-0"></div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
+        {/* Left Column - Text and CTA */}
+        <div className="relative h-[500px] md:h-[650px] flex flex-col justify-end px-6 md:px-12 pb-12 md:pb-16 z-10 overflow-hidden">
+          {/* Men's image in background with overlay */}
+          <div className="absolute inset-0 z-0">
+            <Image 
+              src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3" 
+              alt="Stylish man in hat" 
+              fill 
+              style={{ objectFit: 'cover' }}
+              className="brightness-[0.85]"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/30"></div>
+          </div>
+          
+          {/* Text content */}
+          <div className="relative z-10 text-white">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mb-3"
             >
-              <p className="text-sm font-medium uppercase tracking-widest text-black dark:text-white mb-6 before:content-[''] before:inline-block before:h-px before:w-8 before:bg-black dark:before:bg-white before:mr-4 before:align-middle">
-                Premium Quality Hats
-              </p>
+              <span className="inline-flex items-center px-3 py-1 text-xs font-medium bg-white/10 backdrop-blur-sm text-white rounded-md border border-white/20">
+                New Season Collection
+              </span>
             </motion.div>
-
-            <motion.h1 
-              className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl lg:text-7xl"
-            >
-              {titleWords.map((word, index) => (
-                <motion.span
-                  key={index}
-                  className="inline-block mr-4"
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-                  transition={{ 
-                    duration: 0.7, 
-                    delay: 0.3 + (index * 0.1),
-                    ease: [0.22, 1, 0.36, 1]
-                  }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </motion.h1>
-
-            <motion.p
-              className="mt-6 text-lg leading-8 text-gray-700 dark:text-gray-300 max-w-md"
+            
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.6 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
+            >
+              {title}
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="text-base md:text-lg max-w-md text-gray-200 mb-8"
             >
               {subtitle}
             </motion.p>
-
-            <motion.div 
-              className="mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6"
+            
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="flex flex-wrap gap-4"
             >
-              <Link
-                href={ctaLink}
-                className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-black px-8 font-medium text-white transition-all hover:bg-gray-900 dark:bg-white dark:text-black dark:hover:bg-gray-200"
-              >
-                <span>{ctaText}</span>
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-              
-              <Link
-                href={secondaryCtaLink}
-                className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md border border-black px-8 font-medium text-black transition-all hover:bg-black hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black"
-              >
-                <span>{secondaryCtaText}</span>
-              </Link>
-            </motion.div>
+              {/* Premium animated CTA button */}
+              <div className="relative">
+                <motion.div
+                  className="group relative"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  initial="initial"
+                  whileHover="hover"
+                >
+                  <Link href={ctaLink} className="block">
+                    <div className="relative overflow-hidden">
+                      {/* Base button */}
+                      <div className="bg-white py-4 px-8 flex items-center justify-between min-w-[160px]">
+                        <motion.span 
+                          className="text-black uppercase font-bold tracking-wider text-sm relative z-10"
+                          animate={{
+                            color: isHovered ? "#FFFFFF" : "#000000",
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {ctaText}
+                        </motion.span>
+                        
+                        <motion.div
+                          animate={{
+                            x: isHovered ? 5 : 0,
+                            color: isHovered ? "#FFFFFF" : "#000000"
+                          }}
+                          transition={{ duration: 0.3 }}
+                          className="relative z-10"
+                        >
+                          <ArrowRight className="ml-2 h-5 w-5" />
+                        </motion.div>
+                      </div>
+                      
+                      {/* Animated overlay */}
+                      <motion.div 
+                        className="absolute inset-0 bg-black origin-left" 
+                        initial={{ scaleX: 0 }}
+                        animate={{
+                          scaleX: isHovered ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      />
 
-            <motion.div 
-              className="mt-12 flex items-center gap-6"
-              initial={{ opacity: 0 }}
-              animate={isLoaded ? { opacity: 1 } : {}}
-              transition={{ duration: 1, delay: 1 }}
-            >
-              <div className="flex -space-x-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="inline-block h-8 w-8 rounded-full border-2 border-white bg-gray-800 dark:border-black dark:bg-gray-300">
-                    {/* Placeholder for user avatars/testimonials */}
-                  </div>
-                ))}
-              </div>
-              <div className="text-sm text-gray-700 dark:text-gray-300">
-                Trusted by <span className="font-medium text-black dark:text-white">2,000+</span> customers
+                      {/* Border animation */}
+                      <motion.div 
+                        className="absolute inset-0 border-2 border-white"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: isHovered ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      
+                      {/* Corner accents */}
+                      <motion.div
+                        className="absolute h-[8px] w-[8px] border-t-2 border-l-2 border-white top-0 left-0"
+                        initial={{ opacity: 0, x: -5, y: -5 }}
+                        animate={{ 
+                          opacity: isHovered ? 1 : 0,
+                          x: isHovered ? 0 : -5,
+                          y: isHovered ? 0 : -5,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <motion.div
+                        className="absolute h-[8px] w-[8px] border-t-2 border-r-2 border-white top-0 right-0"
+                        initial={{ opacity: 0, x: 5, y: -5 }}
+                        animate={{ 
+                          opacity: isHovered ? 1 : 0,
+                          x: isHovered ? 0 : 5,
+                          y: isHovered ? 0 : -5,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <motion.div
+                        className="absolute h-[8px] w-[8px] border-b-2 border-l-2 border-white bottom-0 left-0"
+                        initial={{ opacity: 0, x: -5, y: 5 }}
+                        animate={{ 
+                          opacity: isHovered ? 1 : 0,
+                          x: isHovered ? 0 : -5,
+                          y: isHovered ? 0 : 5,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <motion.div
+                        className="absolute h-[8px] w-[8px] border-b-2 border-r-2 border-white bottom-0 right-0"
+                        initial={{ opacity: 0, x: 5, y: 5 }}
+                        animate={{ 
+                          opacity: isHovered ? 1 : 0,
+                          x: isHovered ? 0 : 5,
+                          y: isHovered ? 0 : 5,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
+                  </Link>
+                </motion.div>
               </div>
             </motion.div>
           </div>
         </div>
-
-        {/* Right Image Area */}
-        <div className="relative lg:h-auto">
-          <motion.div
-            className="absolute inset-0 z-0 bg-gray-100 dark:bg-[#171717]"
-            initial={{ scaleX: 1 }}
-            animate={isLoaded ? { scaleX: 0 } : {}}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            style={{ originX: 0 }}
+        
+        {/* Right Column - Image */}
+        <div className="relative h-[500px] md:h-[650px] overflow-hidden hidden md:block">
+          <Image 
+            src={imageUrl}
+            alt="Hat collection"
+            fill
+            style={{ objectFit: 'cover' }}
+            className="brightness-[0.95]"
+            priority
           />
-          
-          <motion.div
-            className="h-80 sm:h-96 lg:absolute lg:inset-0 lg:h-full"
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 1.2, delay: 0.2 }}
-          >
-            <div className="relative h-full overflow-hidden">
-              <Image
-                src={imageSrc}
-                alt="Hero image"
-                fill
-                className="h-full w-full object-cover object-center"
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 lg:bg-gradient-to-r" />
-            </div>
-          </motion.div>
-          
-          <motion.div
-            className="absolute bottom-0 right-0 z-10 p-6 md:p-10 lg:p-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 1 }}
-          >
-            <div className="rounded-lg bg-white/90 p-4 shadow-lg backdrop-blur-sm dark:bg-black/90">
-              <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">New arrival</p>
-              <p className="mt-1 font-medium text-black dark:text-white">Premium collection for 2023</p>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>
