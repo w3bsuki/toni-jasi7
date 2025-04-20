@@ -1,5 +1,7 @@
-import { Collection, Product } from './types';
-import { products } from '@/lib/data/products';
+import { Collection } from './types';
+import { Product } from '@/types/product';
+import { products as newProducts } from '@/lib/data/products';
+import { products as oldProducts } from '@/data/products';
 
 /**
  * Fetch featured collections from API
@@ -49,9 +51,9 @@ export async function getFeaturedCollections(): Promise<Collection[]> {
  */
 export async function getTrendingProducts(): Promise<Product[]> {
   // Use our products from products.ts with the Unsplash images
-  if (products && products.length > 0) {
+  if (newProducts && newProducts.length > 0) {
     // Ensure our products match the expected Product interface
-    return products.map(product => ({
+    return newProducts.map(product => ({
       id: product.id,
       name: product.name,
       slug: product.slug,
@@ -92,4 +94,71 @@ export async function getTrendingProducts(): Promise<Product[]> {
       inStock: true
     }
   ];
+}
+
+/**
+ * Fetch all products from API - combining both product sets
+ */
+export async function getAllProducts(): Promise<Product[]> {
+  // First process the new products with unsplash images
+  const processedNewProducts = newProducts.map(product => ({
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    description: product.description || `A premium quality ${product.name} for all occasions.`,
+    price: product.price,
+    salePrice: product.discount ? product.price * (1 - product.discount / 100) : undefined,
+    images: product.images || [],
+    collection: product.category,
+    sizes: product.sizes || [],
+    isNew: product.isNew || false,
+    isSale: product.discount ? true : false,
+    rating: product.rating,
+    reviewCount: Math.floor(Math.random() * 100) + 5,
+    thumbnail: product.images[0], // Ensure thumbnail is always set to first image
+    category: product.category || "caps",
+    colors: product.colors || [],
+  }));
+  
+  // Then process the old products - use placeholder images if needed
+  const placeholderImage = "/products/hat-placeholder.jpg";
+  const processedOldProducts = oldProducts.map(product => ({
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    description: product.description || `A premium quality ${product.name} for all occasions.`,
+    price: product.price,
+    salePrice: product.salePrice,
+    images: product.images.length > 0 ? product.images : [placeholderImage, placeholderImage],
+    collection: product.collection || "caps",
+    sizes: product.sizes || [],
+    isNew: product.isNew || false,
+    isSale: product.isSale || false,
+    rating: 4.5, // Default rating
+    reviewCount: Math.floor(Math.random() * 100) + 5,
+    thumbnail: product.images[0] || placeholderImage,
+    category: product.collection || "caps",
+    colors: ["black", "white", "gray"], // Default colors
+  }));
+  
+  // Combine both product sets
+  return [...processedNewProducts, ...processedOldProducts];
+}
+
+/**
+ * Fetch a product by slug from API
+ */
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  console.log("Looking for product with slug:", slug);
+  const allProducts = await getAllProducts();
+  const product = allProducts.find(product => product.slug === slug);
+  
+  if (!product) {
+    console.warn(`Product with slug "${slug}" not found!`);
+    console.log("Available products:", allProducts.map(p => p.slug));
+  } else {
+    console.log("Found product:", product.name);
+  }
+  
+  return product || null;
 } 

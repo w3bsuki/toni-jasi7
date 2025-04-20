@@ -1,3 +1,5 @@
+import { Product } from "@/types/product";
+
 // Replace the image URLs with high-quality hat mockup images from Unsplash
 const hatImages = [
   "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?q=80&w=1000&auto=format&fit=crop",  // White cap on gray

@@ -21,7 +21,7 @@ export function Hero({
   subtitle = "Discover our premium hat collection crafted with exceptional quality materials and attention to detail.",
   ctaText = "Shop Now",
   ctaLink = "/collections",
-  imageUrl = "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3"
+  imageUrl = "/products/hat-placeholder.jpg"
 }: HeroProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -40,7 +40,7 @@ export function Hero({
           {/* Men's image in background with overlay */}
           <div className="absolute inset-0 z-0">
             <Image 
-              src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3" 
+              src="/products/man-in-hat-placeholder.jpg" 
               alt="Stylish man in hat" 
               fill 
               style={{ objectFit: 'cover' }}
@@ -194,7 +194,7 @@ export function Hero({
         {/* Right Column - Image */}
         <div className="relative h-[500px] md:h-[650px] overflow-hidden hidden md:block">
           <Image 
-            src={imageUrl}
+            src="/products/hat-collection-placeholder.jpg"
             alt="Hat collection"
             fill
             style={{ objectFit: 'cover' }}

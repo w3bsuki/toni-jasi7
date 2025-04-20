@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Check, ChevronDown, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,67 +18,90 @@ interface ProductFilterProps {
   availableFilters: {
     collections: string[];
     sizes: string[];
+    priceRanges: string[];
   };
   activeFilters: FilterOptions;
-  setActiveFilters: React.Dispatch<React.SetStateAction<FilterOptions>>;
-  resetFilters: () => void;
+  onFilterChange: (filters: FilterOptions) => void;
+  isMobile?: boolean;
 }
 
-export function ProductFilter({
+export default function ProductFilter({
   availableFilters,
   activeFilters,
-  setActiveFilters,
-  resetFilters,
+  onFilterChange,
+  isMobile = false,
 }: ProductFilterProps) {
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [localFilters, setLocalFilters] = useState<FilterOptions>(activeFilters);
+  const [collectionsOpen, setCollectionsOpen] = useState(true);
+  const [priceOpen, setPriceOpen] = useState(true);
+  const [sizeOpen, setSizeOpen] = useState(true);
   
-  const toggleDropdown = (dropdown: string) => {
-    setOpenDropdown(openDropdown === dropdown ? null : dropdown);
-  };
+  // Update local filters when activeFilters prop changes
+  useEffect(() => {
+    setLocalFilters(activeFilters);
+  }, [activeFilters]);
 
   const updateFilter = (
     filterType: keyof FilterOptions,
     value: string | boolean
   ) => {
-    setActiveFilters((prev) => {
-      if (
-        typeof value === "string" &&
-        Array.isArray(prev[filterType as keyof typeof prev])
-      ) {
-        // Handle array-based filters (collections, sizes, priceRanges)
-        const currentValues = prev[filterType as keyof typeof prev] as string[];
-        
-        if (currentValues.includes(value)) {
-          return {
-            ...prev,
-            [filterType]: currentValues.filter((v) => v !== value),
-          };
-        } else {
-          return {
-            ...prev,
-            [filterType]: [...currentValues, value],
-          };
-        }
+    let updatedFilters: FilterOptions;
+    
+    if (
+      filterType === "collections" ||
+      filterType === "priceRanges" ||
+      filterType === "sizes"
+    ) {
+      const valueStr = value as string;
+      const currentValues = [...localFilters[filterType]];
+      
+      // If value exists in array, remove it, otherwise add it
+      if (currentValues.includes(valueStr)) {
+        updatedFilters = {
+          ...localFilters,
+          [filterType]: currentValues.filter((item) => item !== valueStr),
+        };
       } else {
-        // Handle boolean filters (inStock, onSale, newArrivals)
-        return {
-          ...prev,
-          [filterType]: value,
+        updatedFilters = {
+          ...localFilters,
+          [filterType]: [...currentValues, valueStr],
         };
       }
-    });
+    } else {
+      // Handle boolean filters (inStock, onSale, newArrivals)
+      updatedFilters = {
+        ...localFilters,
+        [filterType]: value,
+      };
+    }
+    
+    setLocalFilters(updatedFilters);
+    onFilterChange(updatedFilters);
+  };
+  
+  const resetFilters = () => {
+    const emptyFilters: FilterOptions = {
+      collections: [],
+      priceRanges: [],
+      sizes: [],
+      inStock: false,
+      onSale: false,
+      newArrivals: false,
+    };
+    setLocalFilters(emptyFilters);
+    onFilterChange(emptyFilters);
   };
 
   const priceRanges = ["Under $25", "$25-$35", "$35-$50", "Over $50"];
 
   // Count active filters
   const activeFilterCount = 
-    activeFilters.collections.length +
-    activeFilters.priceRanges.length +
-    activeFilters.sizes.length +
-    (activeFilters.inStock ? 1 : 0) +
-    (activeFilters.onSale ? 1 : 0) +
-    (activeFilters.newArrivals ? 1 : 0);
+    localFilters.collections.length +
+    localFilters.priceRanges.length +
+    localFilters.sizes.length +
+    (localFilters.inStock ? 1 : 0) +
+    (localFilters.onSale ? 1 : 0) +
+    (localFilters.newArrivals ? 1 : 0);
     
   return (
     <div className="bg-white border-b border-gray-200 py-4 sticky top-0 z-10">
@@ -90,16 +113,16 @@ export function ProductFilter({
                 variant="outline" 
                 size="sm"
                 className="flex items-center gap-1.5 py-1 h-auto text-sm font-medium" 
-                onClick={() => toggleDropdown('collections')}
+                onClick={() => setCollectionsOpen(!collectionsOpen)}
               >
                 Collections
                 <ChevronDown size={14} className={cn(
                   "transition-transform",
-                  openDropdown === 'collections' && "rotate-180"
+                  collectionsOpen && "rotate-180"
                 )} />
               </Button>
               
-              {openDropdown === 'collections' && (
+              {collectionsOpen && (
                 <div className="absolute left-0 top-full mt-1 w-60 bg-white shadow-lg rounded-md py-2 z-20 border border-gray-100">
                   <div className="px-3 py-1 max-h-60 overflow-y-auto">
                     {availableFilters.collections.map((collection) => (
@@ -109,7 +132,7 @@ export function ProductFilter({
                       >
                         <div
                           className={`w-4 h-4 rounded border flex items-center justify-center ${
-                            activeFilters.collections.includes(collection)
+                            localFilters.collections.includes(collection)
                               ? "bg-black border-black"
                               : "border-gray-300"
                           }`}
@@ -118,7 +141,7 @@ export function ProductFilter({
                             updateFilter("collections", collection);
                           }}
                         >
-                          {activeFilters.collections.includes(collection) && (
+                          {localFilters.collections.includes(collection) && (
                             <Check size={12} className="text-white" />
                           )}
                         </div>
@@ -135,16 +158,16 @@ export function ProductFilter({
                 variant="outline" 
                 size="sm"
                 className="flex items-center gap-1.5 py-1 h-auto text-sm font-medium" 
-                onClick={() => toggleDropdown('price')}
+                onClick={() => setPriceOpen(!priceOpen)}
               >
                 Price
                 <ChevronDown size={14} className={cn(
                   "transition-transform",
-                  openDropdown === 'price' && "rotate-180"
+                  priceOpen && "rotate-180"
                 )} />
               </Button>
               
-              {openDropdown === 'price' && (
+              {priceOpen && (
                 <div className="absolute left-0 top-full mt-1 w-48 bg-white shadow-lg rounded-md py-2 z-20 border border-gray-100">
                   <div className="px-3 py-1">
                     {priceRanges.map((range) => (
@@ -154,7 +177,7 @@ export function ProductFilter({
                       >
                         <div
                           className={`w-4 h-4 rounded border flex items-center justify-center ${
-                            activeFilters.priceRanges.includes(range)
+                            localFilters.priceRanges.includes(range)
                               ? "bg-black border-black"
                               : "border-gray-300"
                           }`}
@@ -163,7 +186,7 @@ export function ProductFilter({
                             updateFilter("priceRanges", range);
                           }}
                         >
-                          {activeFilters.priceRanges.includes(range) && (
+                          {localFilters.priceRanges.includes(range) && (
                             <Check size={12} className="text-white" />
                           )}
                         </div>
@@ -180,16 +203,16 @@ export function ProductFilter({
                 variant="outline" 
                 size="sm"
                 className="flex items-center gap-1.5 py-1 h-auto text-sm font-medium" 
-                onClick={() => toggleDropdown('sizes')}
+                onClick={() => setSizeOpen(!sizeOpen)}
               >
                 Sizes
                 <ChevronDown size={14} className={cn(
                   "transition-transform",
-                  openDropdown === 'sizes' && "rotate-180"
+                  sizeOpen && "rotate-180"
                 )} />
               </Button>
               
-              {openDropdown === 'sizes' && (
+              {sizeOpen && (
                 <div className="absolute left-0 top-full mt-1 w-48 bg-white shadow-lg rounded-md py-2 z-20 border border-gray-100">
                   <div className="px-3 py-1 max-h-60 overflow-y-auto">
                     {availableFilters.sizes.map((size) => (
@@ -199,7 +222,7 @@ export function ProductFilter({
                       >
                         <div
                           className={`w-4 h-4 rounded border flex items-center justify-center ${
-                            activeFilters.sizes.includes(size)
+                            localFilters.sizes.includes(size)
                               ? "bg-black border-black"
                               : "border-gray-300"
                           }`}
@@ -208,7 +231,7 @@ export function ProductFilter({
                             updateFilter("sizes", size);
                           }}
                         >
-                          {activeFilters.sizes.includes(size) && (
+                          {localFilters.sizes.includes(size) && (
                             <Check size={12} className="text-white" />
                           )}
                         </div>
@@ -225,30 +248,30 @@ export function ProductFilter({
                 variant="outline" 
                 size="sm"
                 className="flex items-center gap-1.5 py-1 h-auto text-sm font-medium" 
-                onClick={() => toggleDropdown('status')}
+                onClick={() => setSizeOpen(!sizeOpen)}
               >
                 Status
                 <ChevronDown size={14} className={cn(
                   "transition-transform",
-                  openDropdown === 'status' && "rotate-180"
+                  sizeOpen && "rotate-180"
                 )} />
               </Button>
               
-              {openDropdown === 'status' && (
+              {sizeOpen && (
                 <div className="absolute left-0 top-full mt-1 w-44 bg-white shadow-lg rounded-md py-2 z-20 border border-gray-100">
                   <div className="px-3 py-1">
                     <label className="flex items-center space-x-2 cursor-pointer py-1.5 hover:bg-gray-50 px-2 rounded">
                       <div
                         className={`w-4 h-4 rounded border flex items-center justify-center ${
-                          activeFilters.newArrivals
+                          localFilters.newArrivals
                             ? "bg-black border-black"
                             : "border-gray-300"
                         }`}
                         onClick={() =>
-                          updateFilter("newArrivals", !activeFilters.newArrivals)
+                          updateFilter("newArrivals", !localFilters.newArrivals)
                         }
                       >
-                        {activeFilters.newArrivals && (
+                        {localFilters.newArrivals && (
                           <Check size={12} className="text-white" />
                         )}
                       </div>
@@ -257,15 +280,15 @@ export function ProductFilter({
                     <label className="flex items-center space-x-2 cursor-pointer py-1.5 hover:bg-gray-50 px-2 rounded">
                       <div
                         className={`w-4 h-4 rounded border flex items-center justify-center ${
-                          activeFilters.onSale
+                          localFilters.onSale
                             ? "bg-black border-black"
                             : "border-gray-300"
                         }`}
                         onClick={() =>
-                          updateFilter("onSale", !activeFilters.onSale)
+                          updateFilter("onSale", !localFilters.onSale)
                         }
                       >
-                        {activeFilters.onSale && (
+                        {localFilters.onSale && (
                           <Check size={12} className="text-white" />
                         )}
                       </div>
@@ -292,7 +315,7 @@ export function ProductFilter({
         {/* Active filter tags */}
         {activeFilterCount > 0 && (
           <div className="flex flex-wrap gap-2 mt-3">
-            {activeFilters.collections.map(collection => (
+            {localFilters.collections.map(collection => (
               <div key={`tag-${collection}`} className="bg-gray-100 text-xs rounded-full px-2.5 py-1 flex items-center">
                 {collection}
                 <X 
@@ -302,7 +325,7 @@ export function ProductFilter({
                 />
               </div>
             ))}
-            {activeFilters.priceRanges.map(range => (
+            {localFilters.priceRanges.map(range => (
               <div key={`tag-${range}`} className="bg-gray-100 text-xs rounded-full px-2.5 py-1 flex items-center">
                 {range}
                 <X 
@@ -312,7 +335,7 @@ export function ProductFilter({
                 />
               </div>
             ))}
-            {activeFilters.sizes.map(size => (
+            {localFilters.sizes.map(size => (
               <div key={`tag-${size}`} className="bg-gray-100 text-xs rounded-full px-2.5 py-1 flex items-center">
                 Size: {size}
                 <X 
@@ -322,7 +345,7 @@ export function ProductFilter({
                 />
               </div>
             ))}
-            {activeFilters.newArrivals && (
+            {localFilters.newArrivals && (
               <div className="bg-gray-100 text-xs rounded-full px-2.5 py-1 flex items-center">
                 New Arrivals
                 <X 
@@ -332,7 +355,7 @@ export function ProductFilter({
                 />
               </div>
             )}
-            {activeFilters.onSale && (
+            {localFilters.onSale && (
               <div className="bg-gray-100 text-xs rounded-full px-2.5 py-1 flex items-center">
                 On Sale
                 <X 
@@ -347,6 +370,4 @@ export function ProductFilter({
       </div>
     </div>
   );
-}
-
-export default ProductFilter; 
+} 

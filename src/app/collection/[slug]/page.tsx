@@ -1,93 +1,57 @@
+import React from "react";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { collections } from "@/data/collections";
 import { products } from "@/data/products";
-import type { Metadata, ResolvingMetadata } from "next";
-import Image from "next/image";
-import ProductCard from "@/components/product/ProductCard";
+import { ProductGrid } from "@/components/product/ProductGrid";
+import { ProductGridSkeleton } from "@/components/product/ProductGridSkeleton";
+import type { Metadata } from "next";
 
-interface CollectionPageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export async function generateMetadata(
-  { params }: CollectionPageProps,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const collection = collections.find((c) => c.slug === params.slug);
-
+  
   if (!collection) {
-    return {
+    return Promise.resolve({
       title: "Collection Not Found",
-    };
+    });
   }
 
-  return {
-    title: `${collection.title} | Hat Store`,
-    description: collection.description,
-  };
+  return Promise.resolve({
+    title: `${collection.name} | Hat Store`,
+    description: collection.description || `Shop our ${collection.name} collection`,
+  });
 }
 
-export default function CollectionPage({ params }: CollectionPageProps) {
+export default function Page({ params }: { params: { slug: string } }) {
   const collection = collections.find((c) => c.slug === params.slug);
-
+  
   if (!collection) {
     notFound();
   }
 
-  // Get products for this collection
+  // Filter products that belong to this collection
   const collectionProducts = products.filter(
-    (product) => product.collection === params.slug
+    (product) => product.collections && product.collections.includes(collection.id)
   );
 
   return (
-    <div>
-      {/* Collection Header */}
-      <div className="relative h-[40vh] min-h-[300px]">
-        <Image
-          src={collection.image}
-          alt={collection.title}
-          fill
-          style={{ objectFit: "cover" }}
-          priority
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex items-center justify-center text-center">
-          <div className="max-w-2xl px-4">
-            <h1 className="text-4xl font-bold text-white mb-4">
-              {collection.title}
-            </h1>
-            <p className="text-white text-lg">{collection.description}</p>
-          </div>
+    <div className="container mx-auto py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">{collection.name}</h1>
+          {collection.description && (
+            <p className="mt-2 text-gray-600">{collection.description}</p>
+          )}
         </div>
-      </div>
-
-      {/* Products Grid */}
-      <div className="container mx-auto px-4 py-16">
-        {collectionProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {collectionProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-medium">
-              No products found in this collection
-            </h2>
-            <p className="mt-2 text-gray-600">
-              Check back soon for new products!
-            </p>
-          </div>
-        )}
+        <Suspense fallback={<ProductGridSkeleton />}>
+          <ProductGrid products={collectionProducts} />
+        </Suspense>
       </div>
     </div>
   );
 }
 
-// Generate static pages for all collections
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return collections.map((collection) => ({
     slug: collection.slug,
   }));

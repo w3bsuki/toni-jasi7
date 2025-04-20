@@ -21,7 +21,7 @@ export default async function Home() {
         subtitle="Discover our premium hat collection crafted with exceptional quality materials and attention to detail."
         ctaText="Shop Now"
         ctaLink="/collections"
-        imageUrl="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3"
+        imageUrl="/products/hat-placeholder.jpg"
       />
       
       {/* Full-width SignupCarousel directly below Hero */}

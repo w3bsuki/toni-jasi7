@@ -126,13 +126,13 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
           <div className="p-6 md:p-8 flex flex-col bg-black">
             <DialogHeader className="mb-4">
               <DialogTitle className="text-2xl font-bold">{product.name}</DialogTitle>
-              <DialogDescription>
-                <div className="flex items-center mt-2">
+              <div className="mt-2">
+                <div className="flex items-center">
                   {renderRating(product.rating)}
                   <span className="mx-2 text-gray-500">|</span>
                   <span className="text-sm text-gray-400">SKU: {product.id}</span>
                 </div>
-              </DialogDescription>
+              </div>
             </DialogHeader>
             
             <div className="my-4">

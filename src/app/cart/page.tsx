@@ -21,7 +21,7 @@ export default function CartPage() {
       price: 29.99,
       size: "L",
       quantity: 1,
-      image: "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=500&auto=format&fit=crop",
+      image: "/products/hat-placeholder.jpg",
     },
     {
       id: "5",
@@ -29,7 +29,7 @@ export default function CartPage() {
       price: 22.99,
       size: "One Size",
       quantity: 2,
-      image: "https://images.unsplash.com/photo-1511231683436-44b8e3c7fb40?q=80&w=500&auto=format&fit=crop",
+      image: "/products/hat-placeholder.jpg",
     },
   ]);
 
