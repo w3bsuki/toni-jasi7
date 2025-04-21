@@ -58,7 +58,7 @@ export function Hero({
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mb-3"
             >
-              <span className="inline-flex items-center px-3 py-1 text-xs font-medium bg-white/10 backdrop-blur-sm text-white rounded-md border border-white/20">
+              <span className="inline-flex items-center px-3 py-1 text-xs font-medium bg-white/10 backdrop-blur-sm text-white rounded border border-white/20">
                 New Season Collection
               </span>
             </motion.div>
@@ -99,7 +99,7 @@ export function Hero({
                   <Link href={ctaLink} className="block">
                     <div className="relative overflow-hidden">
                       {/* Base button */}
-                      <div className="bg-white py-4 px-8 flex items-center justify-between min-w-[160px]">
+                      <div className="bg-white py-4 px-8 flex items-center justify-between min-w-[160px] rounded">
                         <motion.span 
                           className="text-black uppercase font-bold tracking-wider text-sm relative z-10"
                           animate={{
@@ -124,7 +124,7 @@ export function Hero({
                       
                       {/* Animated overlay */}
                       <motion.div 
-                        className="absolute inset-0 bg-black origin-left" 
+                        className="absolute inset-0 bg-black origin-left rounded" 
                         initial={{ scaleX: 0 }}
                         animate={{
                           scaleX: isHovered ? 1 : 0,
@@ -134,7 +134,7 @@ export function Hero({
 
                       {/* Border animation */}
                       <motion.div 
-                        className="absolute inset-0 border-2 border-white"
+                        className="absolute inset-0 border-2 border-white rounded"
                         initial={{ opacity: 0 }}
                         animate={{
                           opacity: isHovered ? 1 : 0,

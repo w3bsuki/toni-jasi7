@@ -16,10 +16,8 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function CollectionsPage() {
-  // Get unique collections for filter options
-  const availableCollections = Array.from(
-    new Set(products.map((product) => product.collection).filter(Boolean))
-  ) as string[];
+  // Get collections from the collections data
+  const availableCollections = collections.map(collection => collection.name);
 
   // Get unique sizes for filter options
   const availableSizes = Array.from(
@@ -82,20 +80,19 @@ export default function CollectionsPage() {
       // Collection filter
       if (
         activeFilters.collections.length > 0 &&
-        !activeFilters.collections.some((c) => {
-          // Convert collection names to lowercase and handle both slug and display name format
-          const collectionName = c.toLowerCase().replace(' ', '-');
-          const productCollection = product.collection ? 
-            product.collection.toLowerCase().replace(' ', '-') : '';
+        !activeFilters.collections.some((selectedCollectionName) => {
+          if (!product.collections) return false;
           
-          // Check product collections array if it exists
-          if (Array.isArray(product.collections)) {
-            return product.collections.some(pc => 
-              pc.toLowerCase().replace(' ', '-').includes(collectionName));
-          }
+          // Find the collection by name
+          const collection = collections.find(c => c.name === selectedCollectionName);
+          if (!collection) return false;
           
-          // Check single collection if that's what the product has
-          return productCollection.includes(collectionName);
+          // Check if product's collections include this collection's ID, slug, or name
+          return product.collections.some(productCollectionRef => 
+            productCollectionRef === collection.id || 
+            productCollectionRef.toLowerCase() === collection.slug.toLowerCase() ||
+            productCollectionRef.toLowerCase() === collection.name.toLowerCase()
+          );
         })
       ) {
         return false;

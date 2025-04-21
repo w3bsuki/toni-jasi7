@@ -110,7 +110,9 @@ export function SignupCarousel() {
             <div key={`${item.id}-${index}`} className="carousel-item">
               <div className="item-container">
                 <div className="flex items-center">
-                  {item.icon}
+                  <span className="flex items-center justify-center w-8 h-8">
+                    {item.icon}
+                  </span>
                   <span className="text-xs font-bold tracking-wider uppercase mr-4">
                     {item.text}
                   </span>
@@ -120,7 +122,7 @@ export function SignupCarousel() {
                   <div className="button-wrap">
                     <button 
                       onClick={item.cta.action}
-                      className="btn-cta flex items-center justify-center relative overflow-hidden group h-8 px-4 py-0 bg-white text-black border border-white"
+                      className="btn-cta flex items-center justify-center relative overflow-hidden group h-9 px-5 py-0 bg-white text-black border border-white rounded"
                     >
                       <span className="button-text">
                         {item.cta.text}
@@ -132,7 +134,7 @@ export function SignupCarousel() {
               </div>
               
               {/* Add visual separator between items */}
-              <Separator orientation="vertical" className="h-8 ml-8 mr-8 bg-white/10" />
+              <Separator orientation="vertical" className="h-10 ml-10 mr-10 bg-white/10" />
             </div>
           ))}
         </div>
@@ -156,19 +158,19 @@ export function SignupCarousel() {
         .carousel-item {
           display: flex;
           align-items: center;
-          padding: 0 8px;
+          padding: 0 12px;
           flex-shrink: 0;
         }
         
         .item-container {
           display: flex;
           align-items: center;
-          gap: 16px;
-          padding: 0 18px;
-          height: 48px;
+          gap: 20px;
+          padding: 0 24px;
+          height: 52px;
           background-color: rgba(255, 255, 255, 0.03);
-          border-radius: 4px;
-          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+          border-radius: 6px;
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
         }
         
         .button-wrap {
@@ -191,7 +193,7 @@ export function SignupCarousel() {
           letter-spacing: 0.05em;
           text-transform: uppercase;
           height: 36px;
-          padding: 0 15px;
+          padding: 0 16px;
         }
         
         .button-text {

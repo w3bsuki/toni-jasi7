@@ -392,54 +392,44 @@ export function ProductDetail({ product }: ProductDetailProps) {
         </motion.div>
       </div>
 
-      {/* Product Details Tabs - One single tabs component with improved styling */}
+      {/* Product Details Tabs */}
       <motion.div 
-        variants={fadeIn}
         className="mt-12 border-t border-gray-200 pt-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
-        <Tabs defaultValue="description" onValueChange={(value) => setActiveTab(value as any)} className="w-full">
-          <TabsList className="w-full justify-start border-b mb-8 pb-0 bg-transparent space-x-8">
+        <Tabs defaultValue="description" className="w-full">
+          <TabsList className="w-full justify-start border-b mb-8 pb-0 bg-transparent">
             <TabsTrigger 
               value="description"
-              className={cn(
-                "pb-4 text-base font-medium rounded-none border-b-2 transition-colors",
-                activeTab === "description" ? "border-black text-black" : "border-transparent text-gray-500"
-              )}
+              className="pb-4 text-base font-medium rounded-none data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:text-black data-[state=active]:shadow-none border-b-2 border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300"
             >
               Product Details
             </TabsTrigger>
             <TabsTrigger 
               value="shipping"
-              className={cn(
-                "pb-4 text-base font-medium rounded-none border-b-2 transition-colors",
-                activeTab === "shipping" ? "border-black text-black" : "border-transparent text-gray-500"
-              )}
+              className="pb-4 text-base font-medium rounded-none data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:text-black data-[state=active]:shadow-none border-b-2 border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300"
             >
               Shipping & Returns
             </TabsTrigger>
             <TabsTrigger 
               value="reviews"
-              className={cn(
-                "pb-4 text-base font-medium rounded-none border-b-2 transition-colors",
-                activeTab === "reviews" ? "border-black text-black" : "border-transparent text-gray-500"
-              )}
+              className="pb-4 text-base font-medium rounded-none data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:text-black data-[state=active]:shadow-none border-b-2 border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300"
             >
               Reviews
             </TabsTrigger>
           </TabsList>
           
-          <AnimatePresence>
-            <TabsContent value="description" className="mt-0">
+          <AnimatePresence mode="wait">
+            <TabsContent 
+              value="description" 
+              className="mt-4 focus-visible:outline-none focus-visible:ring-0"
+            >
               <motion.div
-                key="description"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="prose max-w-none"
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
@@ -449,40 +439,51 @@ export function ProductDetail({ product }: ProductDetailProps) {
                       Crafted with attention to detail, this hat combines comfort, durability, and fashion.`}
                     </p>
                     
-                    <h4 className="font-medium text-lg mb-3">Key Features</h4>
-                    <ul className="space-y-2 mb-6">
-                      <li className="flex items-start">
-                        <Check className="w-5 h-5 text-primary mr-2 mt-0.5" />
-                        <span>Premium quality materials for exceptional durability</span>
-                      </li>
-                      <li className="flex items-start">
-                        <Check className="w-5 h-5 text-primary mr-2 mt-0.5" />
-                        <span>Adjustable fit system for maximum comfort</span>
-                      </li>
-                      <li className="flex items-start">
-                        <Check className="w-5 h-5 text-primary mr-2 mt-0.5" />
-                        <span>Stylish, versatile design for everyday wear</span>
-                      </li>
-                      <li className="flex items-start">
-                        <Check className="w-5 h-5 text-primary mr-2 mt-0.5" />
-                        <span>Water-resistant finish to protect in light rain</span>
-                      </li>
-                      <li className="flex items-start">
-                        <Check className="w-5 h-5 text-primary mr-2 mt-0.5" />
-                        <span>Breathable fabric for all-day comfort</span>
-                      </li>
-                    </ul>
+                    <div>
+                      <h4 className="font-medium text-lg mb-3">Key Features</h4>
+                      <ul className="space-y-3 mb-6">
+                        {[
+                          "Premium quality materials for exceptional durability",
+                          "Adjustable fit system for maximum comfort",
+                          "Stylish, versatile design for everyday wear",
+                          "Water-resistant finish to protect in light rain",
+                          "Breathable fabric for all-day comfort"
+                        ].map((feature, index) => (
+                          <motion.li 
+                            key={`feature-${index}`}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: 0.1 * (index + 1) }}
+                            className="flex items-start group"
+                          >
+                            <div className="rounded-full p-1 bg-primary/10 text-primary mr-3 mt-0.5 transform group-hover:scale-110 transition-transform">
+                              <Check className="w-4 h-4" />
+                            </div>
+                            <span className="group-hover:text-primary transition-colors">{feature}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                   
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    <h4 className="font-medium text-lg mb-4">Materials & Care</h4>
-                    <div className="space-y-4 mb-6">
-                      <div>
-                        <h5 className="font-medium text-gray-900 mb-1">Materials</h5>
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 className="font-medium text-lg mb-4 flex items-center">
+                      <Info className="w-5 h-5 mr-2 text-primary" />
+                      Materials & Care
+                    </h4>
+                    <div className="space-y-5 mb-6">
+                      <div className="bg-white p-4 rounded-lg shadow-sm">
+                        <h5 className="font-medium text-gray-900 mb-1 flex items-center">
+                          <span className="w-2 h-2 rounded-full bg-primary mr-2"></span>
+                          Materials
+                        </h5>
                         <p className="text-gray-700">Made from 100% premium cotton with high-quality stitching and hardware.</p>
                       </div>
-                      <div>
-                        <h5 className="font-medium text-gray-900 mb-1">Care Instructions</h5>
+                      <div className="bg-white p-4 rounded-lg shadow-sm">
+                        <h5 className="font-medium text-gray-900 mb-1 flex items-center">
+                          <span className="w-2 h-2 rounded-full bg-primary mr-2"></span>
+                          Care Instructions
+                        </h5>
                         <ul className="list-disc pl-5 text-gray-700 space-y-1">
                           <li>Hand wash with cold water</li>
                           <li>Do not bleach</li>
@@ -494,24 +495,29 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     </div>
                     
                     <div className="border-t border-gray-200 pt-4">
-                      <h5 className="font-medium text-gray-900 mb-2">Dimensions</h5>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div className="bg-white p-3 rounded">
-                          <p className="text-gray-500">Height</p>
-                          <p className="font-medium">4 inches</p>
-                        </div>
-                        <div className="bg-white p-3 rounded">
-                          <p className="text-gray-500">Brim Width</p>
-                          <p className="font-medium">2.75 inches</p>
-                        </div>
-                        <div className="bg-white p-3 rounded">
-                          <p className="text-gray-500">Weight</p>
-                          <p className="font-medium">3.2 oz</p>
-                        </div>
-                        <div className="bg-white p-3 rounded">
-                          <p className="text-gray-500">Adjustable</p>
-                          <p className="font-medium">Yes</p>
-                        </div>
+                      <h5 className="font-medium text-gray-900 mb-2 flex items-center">
+                        <Ruler className="w-4 h-4 mr-2 text-primary" />
+                        Dimensions
+                      </h5>
+                      <div className="grid grid-cols-2 gap-3 mt-3">
+                        {[
+                          { label: "Height", value: "4 inches" },
+                          { label: "Brim Width", value: "2.75 inches" },
+                          { label: "Weight", value: "3.2 oz" },
+                          { label: "Adjustable", value: "Yes" }
+                        ].map((dimension, index) => (
+                          <motion.div 
+                            key={`dimension-${index}`}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: 0.1 * (index + 1) }}
+                            whileHover={{ scale: 1.03 }}
+                            className="bg-white p-3 rounded-md shadow-sm transition-all hover:shadow hover:border-primary/20"
+                          >
+                            <p className="text-gray-500 text-sm">{dimension.label}</p>
+                            <p className="font-medium">{dimension.value}</p>
+                          </motion.div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -519,62 +525,89 @@ export function ProductDetail({ product }: ProductDetailProps) {
               </motion.div>
             </TabsContent>
             
-            <TabsContent value="shipping" className="mt-0">
+            <TabsContent 
+              value="shipping" 
+              className="mt-4 focus-visible:outline-none focus-visible:ring-0"
+            >
               <motion.div
-                key="shipping"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <div className="grid md:grid-cols-2 gap-10">
-                  <div>
-                    <h3 className="text-xl font-semibold mb-5">Delivery Options</h3>
+                  <div className="relative">
+                    <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/80 to-primary/20 rounded-full"></div>
+                    <h3 className="text-xl font-semibold mb-5 flex items-center">
+                      <Truck className="w-5 h-5 mr-2 text-primary" />
+                      Delivery Options
+                    </h3>
                     <div className="space-y-4">
-                      <div className="bg-white p-5 border border-gray-100 rounded-lg flex justify-between items-center">
-                        <div>
-                          <div className="flex items-center">
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full mr-2">Standard</span>
-                            <h4 className="font-medium text-gray-900">Standard Shipping</h4>
+                      {[
+                        {
+                          badge: "Standard",
+                          badgeColor: "blue",
+                          title: "Standard Shipping",
+                          time: "3-5 business days",
+                          carrier: "Delivered by USPS or UPS",
+                          price: "$4.99",
+                          note: "Tracking included"
+                        },
+                        {
+                          badge: "Expedited",
+                          badgeColor: "purple",
+                          title: "Express Shipping",
+                          time: "1-2 business days",
+                          carrier: "Delivered by FedEx or UPS",
+                          price: "$9.99",
+                          note: "Priority handling"
+                        },
+                        {
+                          badge: "Free",
+                          badgeColor: "green",
+                          title: "Free Shipping",
+                          time: "5-7 business days",
+                          carrier: "On orders over $99",
+                          price: "FREE",
+                          note: "Standard tracking"
+                        }
+                      ].map((option, index) => (
+                        <motion.div
+                          key={`delivery-${index}`}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: 0.1 * (index + 1) }}
+                          whileHover={{ scale: 1.02, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}
+                          className={cn(
+                            "bg-white p-5 border rounded-lg flex justify-between items-center transition-all",
+                            option.badgeColor === "green" ? "border-green-100" : "border-gray-100"
+                          )}
+                        >
+                          <div>
+                            <div className="flex items-center">
+                              <span className={cn(
+                                "text-xs font-medium px-2.5 py-0.5 rounded-full mr-2",
+                                option.badgeColor === "blue" ? "bg-blue-100 text-blue-800" :
+                                option.badgeColor === "purple" ? "bg-purple-100 text-purple-800" :
+                                "bg-green-100 text-green-800"
+                              )}>
+                                {option.badge}
+                              </span>
+                              <h4 className="font-medium text-gray-900">{option.title}</h4>
+                            </div>
+                            <p className="text-sm text-gray-500 mt-1">{option.time}</p>
+                            <p className="text-xs text-gray-500 mt-1">{option.carrier}</p>
                           </div>
-                          <p className="text-sm text-gray-500 mt-1">3-5 business days</p>
-                          <p className="text-xs text-gray-500 mt-1">Delivered by USPS or UPS</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-gray-900">$4.99</p>
-                          <p className="text-xs text-gray-500 mt-1">Tracking included</p>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-white p-5 border border-gray-100 rounded-lg flex justify-between items-center">
-                        <div>
-                          <div className="flex items-center">
-                            <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full mr-2">Expedited</span>
-                            <h4 className="font-medium text-gray-900">Express Shipping</h4>
+                          <div className="text-right">
+                            <p className={cn(
+                              "font-semibold",
+                              option.price === "FREE" ? "text-green-600" : "text-gray-900"
+                            )}>
+                              {option.price}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">{option.note}</p>
                           </div>
-                          <p className="text-sm text-gray-500 mt-1">1-2 business days</p>
-                          <p className="text-xs text-gray-500 mt-1">Delivered by FedEx or UPS</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-gray-900">$9.99</p>
-                          <p className="text-xs text-gray-500 mt-1">Priority handling</p>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-white p-5 border border-green-100 rounded-lg flex justify-between items-center">
-                        <div>
-                          <div className="flex items-center">
-                            <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full mr-2">Free</span>
-                            <h4 className="font-medium text-gray-900">Free Shipping</h4>
-                          </div>
-                          <p className="text-sm text-gray-500 mt-1">5-7 business days</p>
-                          <p className="text-xs text-gray-500 mt-1">On orders over $99</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-green-600">FREE</p>
-                          <p className="text-xs text-gray-500 mt-1">Standard tracking</p>
-                        </div>
-                      </div>
+                        </motion.div>
+                      ))}
                     </div>
                     
                     <div className="mt-6">
@@ -588,41 +621,68 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     </div>
                   </div>
                   
-                  <div>
-                    <h3 className="text-xl font-semibold mb-5">Return Policy</h3>
-                    <div className="bg-gray-50 p-6 rounded-lg mb-5">
+                  <div className="relative">
+                    <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500/80 to-blue-500/20 rounded-full"></div>
+                    <h3 className="text-xl font-semibold mb-5 flex items-center">
+                      <RotateCcw className="w-5 h-5 mr-2 text-blue-500" />
+                      Return Policy
+                    </h3>
+                    <div className="bg-gray-50 p-6 rounded-lg mb-5 hover:shadow-md transition-shadow">
                       <div className="flex items-center justify-between mb-4">
                         <h4 className="font-medium text-gray-900">30-Day Returns</h4>
-                        <span className="text-sm text-green-600 font-medium">Easy Process</span>
+                        <span className="px-3 py-1 text-xs text-green-600 font-medium bg-green-50 rounded-full">Easy Process</span>
                       </div>
                       <p className="text-gray-700 mb-3">
                         We stand behind our products and want you to be completely satisfied with your purchase. If you're not happy for any reason, we accept returns within 30 days of delivery.
                       </p>
                       <div className="grid grid-cols-2 gap-4 mt-4">
-                        <div className="bg-white p-4 rounded-md shadow-sm">
-                          <div className="flex items-center mb-2">
-                            <RotateCcw className="w-4 h-4 text-primary mr-2" />
-                            <h5 className="font-medium text-sm">For Refunds</h5>
-                          </div>
-                          <ul className="text-xs text-gray-600 space-y-1">
-                            <li>• Original packaging preferred</li>
-                            <li>• Unused condition</li>
-                            <li>• Return shipping fee applies</li>
-                            <li>• Refund to original payment method</li>
-                          </ul>
-                        </div>
-                        <div className="bg-white p-4 rounded-md shadow-sm">
-                          <div className="flex items-center mb-2">
-                            <RotateCcw className="w-4 h-4 text-blue-500 mr-2" />
-                            <h5 className="font-medium text-sm">For Exchanges</h5>
-                          </div>
-                          <ul className="text-xs text-gray-600 space-y-1">
-                            <li>• Original packaging preferred</li>
-                            <li>• Unused condition</li>
-                            <li>• Free return shipping</li>
-                            <li>• Quick processing</li>
-                          </ul>
-                        </div>
+                        {[
+                          {
+                            icon: <RotateCcw className="w-4 h-4 text-primary" />,
+                            title: "For Refunds",
+                            items: [
+                              "Original packaging preferred",
+                              "Unused condition",
+                              "Return shipping fee applies",
+                              "Refund to original payment method"
+                            ]
+                          },
+                          {
+                            icon: <RotateCcw className="w-4 h-4 text-blue-500" />,
+                            title: "For Exchanges",
+                            items: [
+                              "Original packaging preferred",
+                              "Unused condition",
+                              "Free return shipping",
+                              "Quick processing"
+                            ]
+                          }
+                        ].map((policy, policyIndex) => (
+                          <motion.div 
+                            key={`return-policy-${policyIndex}`}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: 0.1 * (policyIndex + 1) }}
+                            whileHover={{ scale: 1.03 }}
+                            className="bg-white p-4 rounded-md shadow-sm transition-all"
+                          >
+                            <div className="flex items-center mb-2">
+                              {policy.icon}
+                              <h5 className="font-medium text-sm ml-2">{policy.title}</h5>
+                            </div>
+                            <ul className="text-xs text-gray-600 space-y-1.5">
+                              {policy.items.map((item, itemIndex) => (
+                                <li 
+                                  key={`policy-item-${policyIndex}-${itemIndex}`}
+                                  className="flex items-baseline"
+                                >
+                                  <span className="w-1 h-1 rounded-full bg-gray-400 mr-2 inline-block mt-1"></span>
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
+                        ))}
                       </div>
                     </div>
                     
@@ -635,28 +695,36 @@ export function ProductDetail({ product }: ProductDetailProps) {
                         <li>Missing original tags or packaging may result in reduced refund</li>
                       </ul>
                       
-                      <div className="mt-4 p-3 bg-blue-50 rounded-md">
-                        <p className="text-sm text-blue-800">
-                          For detailed instructions on how to initiate a return, please visit our <a href="#" className="underline font-medium">Returns Portal</a> or contact our customer service team.
+                      <motion.div 
+                        whileHover={{ y: -2 }}
+                        className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-100"
+                      >
+                        <p className="text-sm text-blue-800 flex items-center">
+                          <Info className="w-4 h-4 mr-2 flex-shrink-0" />
+                          For detailed instructions on how to initiate a return, please visit our <a href="#" className="underline font-medium hover:text-blue-600 transition-colors">Returns Portal</a> or contact our customer service team.
                         </p>
-                      </div>
+                      </motion.div>
                     </div>
                   </div>
                 </div>
               </motion.div>
             </TabsContent>
             
-            <TabsContent value="reviews" className="mt-0">
+            <TabsContent 
+              value="reviews" 
+              className="mt-4 focus-visible:outline-none focus-visible:ring-0"
+            >
               <motion.div
-                key="reviews"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold">Customer Reviews</h3>
-                  <Button variant="outline" className="gap-2 bg-primary hover:bg-primary/90 text-white border-primary">
+                  <Button 
+                    variant="outline" 
+                    className="gap-2 bg-primary hover:bg-primary/90 text-white border-primary transition-transform hover:scale-105"
+                  >
                     <Star className="w-4 h-4" fill="currentColor" />
                     Write a Review
                   </Button>
@@ -664,10 +732,17 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
                   <div className="lg:w-1/3">
-                    <div className="bg-gray-50 rounded-lg p-6 shadow-sm">
+                    <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                       <div className="text-center mb-6">
                         <div className="flex items-center justify-center">
-                          <p className="text-5xl font-bold mr-3">{product.rating || 4.5}</p>
+                          <motion.p 
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                            className="text-5xl font-bold mr-3"
+                          >
+                            {product.rating || 4.5}
+                          </motion.p>
                           <div className="flex flex-col items-start">
                             <Rating value={product.rating || 4.5} size={16} />
                             <p className="text-sm text-gray-500 mt-1">
@@ -680,17 +755,19 @@ export function ProductDetail({ product }: ProductDetailProps) {
                       <div className="mt-6">
                         <h4 className="font-medium mb-4">Ratings Breakdown</h4>
                         <div className="space-y-2">
-                          {[5, 4, 3, 2, 1].map((star) => (
-                            <div key={`rating-breakdown-${star}`} className="flex items-center gap-2">
-                              <span className="text-sm w-8 text-right font-medium">{star}</span>
-                              <Star className="w-4 h-4 text-yellow-400" fill={star <= 5 ? "currentColor" : "none"} />
+                          {[5, 4, 3, 2, 1].map((star, index) => (
+                            <div key={`rating-breakdown-${star}`} className="flex items-center gap-2 group">
+                              <span className="text-sm w-8 text-right font-medium group-hover:text-primary transition-colors">{star}</span>
+                              <Star className="w-4 h-4 text-yellow-400 group-hover:scale-110 transition-transform" fill="currentColor" />
                               <div className="flex-1 h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-yellow-400 rounded-full"
-                                  style={{
-                                    width: `${star === 5 ? 70 : star === 4 ? 20 : star === 3 ? 5 : star === 2 ? 3 : 2}%`,
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ 
+                                    width: `${star === 5 ? 70 : star === 4 ? 20 : star === 3 ? 5 : star === 2 ? 3 : 2}%` 
                                   }}
-                                ></div>
+                                  transition={{ duration: 0.7, delay: 0.1 * index }}
+                                  className="h-full bg-yellow-400 rounded-full"
+                                ></motion.div>
                               </div>
                               <span className="text-sm text-gray-500">
                                 {star === 5 ? 18 : star === 4 ? 5 : star === 3 ? 1 : star === 2 ? 0 : 0}
@@ -703,11 +780,21 @@ export function ProductDetail({ product }: ProductDetailProps) {
                       <div className="border-t border-gray-200 mt-6 pt-6">
                         <h4 className="font-medium mb-3 text-center">Review Highlights</h4>
                         <div className="flex flex-wrap gap-2 justify-center">
-                          <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700">Great Quality</span>
-                          <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700">Perfect Fit</span>
-                          <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700">Good Value</span>
-                          <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700">Fast Shipping</span>
-                          <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700">As Described</span>
+                          {[
+                            "Great Quality", "Perfect Fit", "Good Value", 
+                            "Fast Shipping", "As Described"
+                          ].map((highlight, index) => (
+                            <motion.span 
+                              key={`highlight-${index}`}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.2, delay: 0.1 * index }}
+                              whileHover={{ scale: 1.05, backgroundColor: "#f0f9ff" }}
+                              className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700 cursor-default transition-all"
+                            >
+                              {highlight}
+                            </motion.span>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -769,7 +856,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                       <h4 className="font-medium">24 Reviews</h4>
                       <div className="flex gap-2">
                         <select 
-                          className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white"
+                          className="text-sm border border-gray-300 rounded-md px-3 py-1.5 bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                           aria-label="Sort reviews"
                         >
                           <option>Most Recent</option>
@@ -782,11 +869,17 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     
                     <div className="space-y-6">
                       {/* Review 1 */}
-                      <div className="border border-gray-100 rounded-lg p-5 bg-white shadow-sm">
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.1 }}
+                        whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)" }}
+                        className="border border-gray-100 rounded-xl p-5 bg-white shadow-sm transition-all"
+                      >
                         <div className="flex justify-between items-start mb-3">
                           <div>
                             <div className="flex items-center gap-2">
-                              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-medium">SJ</div>
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-medium shadow-sm">SJ</div>
                               <div>
                                 <h5 className="font-medium">Sarah Johnson</h5>
                                 <p className="text-xs text-gray-500">Verified Purchase • April 12, 2023</p>
@@ -799,7 +892,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                 <Star 
                                   key={`star-review1-rating-${star}`} 
                                   className="w-4 h-4 text-yellow-400" 
-                                  fill={star <= 5 ? "currentColor" : "none"} 
+                                  fill="currentColor" 
                                 />
                               ))}
                             </div>
@@ -813,43 +906,50 @@ export function ProductDetail({ product }: ProductDetailProps) {
                         </p>
                         
                         <div className="flex gap-3 mb-4">
-                          <div className="w-16 h-16 rounded-md bg-gray-100 overflow-hidden">
-                            <img 
-                              src="https://images.unsplash.com/photo-1521369909029-2afed882baee?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
-                              alt="Customer review image" 
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div className="w-16 h-16 rounded-md bg-gray-100 overflow-hidden">
-                            <img 
-                              src="https://images.unsplash.com/photo-1556306535-0f09a537f0a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
-                              alt="Customer review image" 
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
+                          {[
+                            "https://images.unsplash.com/photo-1521369909029-2afed882baee?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80",
+                            "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80"
+                          ].map((image, index) => (
+                            <div 
+                              key={`review-image-${index}`}
+                              className="w-16 h-16 rounded-md bg-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                            >
+                              <img 
+                                src={image} 
+                                alt="Customer review image" 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ))}
                         </div>
                         
                         <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-                          <div className="flex items-center gap-3">
-                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary">
+                          <div className="flex items-center gap-4">
+                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary transition-colors">
                               <ThumbsUp className="w-4 h-4 mr-1" /> Helpful (12)
                             </button>
-                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary">
+                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary transition-colors">
                               <MessageSquare className="w-4 h-4 mr-1" /> Reply
                             </button>
                           </div>
                           <div>
-                            <span className="text-xs text-gray-500">Report</span>
+                            <button className="text-xs text-gray-500 hover:text-gray-700 transition-colors">Report</button>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                       
                       {/* Review 2 */}
-                      <div className="border border-gray-100 rounded-lg p-5 bg-white shadow-sm">
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.2 }}
+                        whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)" }}
+                        className="border border-gray-100 rounded-xl p-5 bg-white shadow-sm transition-all"
+                      >
                         <div className="flex justify-between items-start mb-3">
                           <div>
                             <div className="flex items-center gap-2">
-                              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center text-white font-medium">MD</div>
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center text-white font-medium shadow-sm">MD</div>
                               <div>
                                 <h5 className="font-medium">Mike Davis</h5>
                                 <p className="text-xs text-gray-500">Verified Purchase • March 28, 2023</p>
@@ -880,78 +980,25 @@ export function ProductDetail({ product }: ProductDetailProps) {
                         </p>
                         
                         <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-                          <div className="flex items-center gap-3">
-                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary">
+                          <div className="flex items-center gap-4">
+                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary transition-colors">
                               <ThumbsUp className="w-4 h-4 mr-1" /> Helpful (8)
                             </button>
-                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary">
+                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary transition-colors">
                               <MessageSquare className="w-4 h-4 mr-1" /> Reply
                             </button>
                           </div>
                           <div>
-                            <span className="text-xs text-gray-500">Report</span>
+                            <button className="text-xs text-gray-500 hover:text-gray-700 transition-colors">Report</button>
                           </div>
                         </div>
-                      </div>
-                      
-                      {/* Review 3 */}
-                      <div className="border border-gray-100 rounded-lg p-5 bg-white shadow-sm">
-                        <div className="flex justify-between items-start mb-3">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center text-white font-medium">AT</div>
-                              <div>
-                                <h5 className="font-medium">Alex Thompson</h5>
-                                <p className="text-xs text-gray-500">Verified Purchase • February 15, 2023</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <div className="flex items-center">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star 
-                                  key={`star-review3-rating-${star}`} 
-                                  className="w-4 h-4 text-yellow-400" 
-                                  fill={star <= 5 ? "currentColor" : "none"} 
-                                />
-                              ))}
-                            </div>
-                            <span className="text-xs text-gray-500 mt-1">for size M</span>
-                          </div>
-                        </div>
-                        
-                        <h6 className="font-semibold mb-2">Absolutely love this hat!</h6>
-                        <p className="text-gray-700 mb-3">
-                          This hat is perfect for my beach vacation. The material is lightweight yet durable, and it provides excellent sun protection. The color is exactly as shown in the pictures. The shipping was faster than expected too. Would definitely recommend!
-                        </p>
-                        
-                        <div className="flex gap-3 mb-4">
-                          <div className="w-16 h-16 rounded-md bg-gray-100 overflow-hidden">
-                            <img 
-                              src="https://images.unsplash.com/photo-1622445275576-721325763afe?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
-                              alt="Customer review image" 
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-                          <div className="flex items-center gap-3">
-                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary">
-                              <ThumbsUp className="w-4 h-4 mr-1" /> Helpful (15)
-                            </button>
-                            <button className="inline-flex items-center text-sm text-gray-600 hover:text-primary">
-                              <MessageSquare className="w-4 h-4 mr-1" /> Reply
-                            </button>
-                          </div>
-                          <div>
-                            <span className="text-xs text-gray-500">Report</span>
-                          </div>
-                        </div>
-                      </div>
+                      </motion.div>
                       
                       <div className="mt-8 flex justify-center">
-                        <Button variant="outline" className="gap-2">
+                        <Button 
+                          variant="outline" 
+                          className="gap-2 transition-all hover:bg-gray-50 hover:scale-105"
+                        >
                           <MoreHorizontal className="w-4 h-4" />
                           Load More Reviews
                         </Button>

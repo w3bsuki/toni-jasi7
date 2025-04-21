@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import { Hero } from '@/components/home/Hero';
 import { SignupCarousel } from '@/components/home/SignupCarousel';
 import { FeaturedCollections } from '@/components/home/FeaturedCollections';
-import TrendingCarousel from '@/components/home/TrendingCarousel';
 import { Collection, Product } from '@/lib/types';
 import { getFeaturedCollections, getTrendingProducts } from '@/lib/api';
 
@@ -27,11 +26,11 @@ export default async function Home() {
       {/* Full-width SignupCarousel directly below Hero */}
       <SignupCarousel />
       
-      {/* Full-width FeaturedCollections */}
-      <FeaturedCollections collections={collections} />
-      
-      {/* Full-width TrendingCarousel below FeaturedCollections */}
-      <TrendingCarousel products={trendingProducts} />
+      {/* Full-width FeaturedCollections with Trending Products */}
+      <FeaturedCollections 
+        collections={collections} 
+        trendingProducts={trendingProducts} 
+      />
     </div>
   );
 }

@@ -138,4 +138,17 @@
       transform: translateX(-50%);
     }
   }
+  
+  .animate-shimmer-loop {
+    animation: shimmer-loop 2s infinite;
+  }
+  
+  @keyframes shimmer-loop {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(200%);
+    }
+  }
 }

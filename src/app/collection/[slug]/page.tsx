@@ -31,7 +31,19 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   // Filter products that belong to this collection
   const collectionProducts = products.filter(
-    (product) => product.collections && product.collections.includes(collection.id)
+    (product) => {
+      if (!product.collections) return false;
+      
+      // Check if product collections array includes either:
+      // 1. The collection ID
+      // 2. The collection slug
+      // 3. The collection name
+      return product.collections.some(col => 
+        col === collection.id || 
+        col.toLowerCase() === collection.slug.toLowerCase() ||
+        col.toLowerCase() === collection.name.toLowerCase()
+      );
+    }
   );
 
   return (

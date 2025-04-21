@@ -1,6 +1,6 @@
 export interface Collection {
   id: string;
-  title: string;
+  name: string;
   slug: string;
   image: string;
   description: string;

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, Search, ShoppingBag, ChevronDown, Instagram } from "lucide-react";
+import { Menu, Search, ShoppingBag, ChevronDown, Instagram, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MobileMenu from "./MobileMenu";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,7 @@ export function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   // Handle scroll behavior
   useEffect(() => {
@@ -197,7 +198,7 @@ export function Navbar() {
                   <input
                     type="text"
                     placeholder="Search products..."
-                    className="w-full pl-10 pr-4 py-1.5 border border-gray-200 dark:border-zinc-800 dark:bg-black text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+                    className="w-full pl-10 pr-4 py-1.5 border border-gray-200 dark:border-zinc-800 dark:bg-black text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white rounded"
                     autoFocus
                     onBlur={() => setSearchOpen(false)}
                   />
@@ -208,7 +209,7 @@ export function Navbar() {
                 </motion.div>
               ) : (
                 <button
-                  className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900"
+                  className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900 rounded"
                   aria-label="Search"
                   onClick={() => setSearchOpen(true)}
                 >
@@ -219,28 +220,54 @@ export function Navbar() {
             
             <ThemeToggle />
             
-            <Link href="/collections" className="hidden md:block">
+            {/* SHOP Button with hero animation - Desktop */}
+            <div className="hidden md:block">
+              <Link href="/collections">
+                <div 
+                  className="relative h-9 w-24 overflow-hidden group border border-black dark:border-white rounded"
+                >
+                  {/* Base state */}
+                  <div className="absolute inset-0 bg-black dark:bg-white flex items-center justify-center transition-transform duration-300 group-hover:translate-y-full">
+                    <span className="text-white dark:text-black uppercase font-bold tracking-wider text-xs">
+                      SHOP
+                    </span>
+                  </div>
+                  
+                  {/* Hover state */}
+                  <div className="absolute inset-0 bg-white dark:bg-black flex items-center justify-center transform -translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+                    <span className="text-black dark:text-white uppercase font-bold tracking-wider text-xs flex items-center">
+                      SHOP <ArrowRight className="ml-1 h-3 w-3" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+            
+            {/* SHOP Button for mobile */}
+            <Link href="/collections" className="md:hidden">
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="border-black bg-black text-white hover:bg-white hover:text-black min-w-20 h-9 font-bold tracking-wider text-xs uppercase dark:bg-white dark:text-black dark:border-white dark:hover:bg-black dark:hover:text-white transition-colors rounded-none"
+                className="border-black bg-black text-white hover:bg-white hover:text-black h-8 px-3 font-bold tracking-wider text-xs uppercase dark:bg-white dark:text-black dark:border-white dark:hover:bg-black dark:hover:text-white transition-colors rounded"
               >
                 SHOP
               </Button>
             </Link>
             
+            {/* Cart button */}
             <Link 
               href="/cart" 
-              className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors relative p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900"
+              className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors relative p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900 rounded"
             >
               <ShoppingBag size={20} />
-              <span className="absolute -top-1 -right-1 bg-black text-white dark:bg-white dark:text-black text-xs font-bold h-4 w-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-black text-white dark:bg-white dark:text-black text-xs font-bold h-4 w-4 flex items-center justify-center rounded-full">
                 0
               </span>
             </Link>
             
+            {/* Mobile menu button */}
             <button
-              className="md:hidden text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900"
+              className="md:hidden text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-900 rounded"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open menu"
             >
@@ -264,7 +291,7 @@ export function Navbar() {
                 <input
                   type="text"
                   placeholder="Search products..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-800 dark:bg-black text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-800 dark:bg-black text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white rounded"
                   autoFocus
                   onBlur={() => setSearchOpen(false)}
                 />
