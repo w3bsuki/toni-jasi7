@@ -5,6 +5,10 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true'
 
 const CompressionPlugin = require('compression-webpack-plugin');
 const { ImageMinimizerPlugin } = require('image-minimizer-webpack-plugin');
+const imagemin = require('imagemin');
+const imageminMozjpeg = require('imagemin-mozjpeg');
+const imageminOptipng = require('imagemin-optipng');
+const imageminSvgo = require('imagemin-svgo');
 
 const nextConfig = {
   reactStrictMode: true,
@@ -28,10 +32,6 @@ const nextConfig = {
   },
   // Enable server-side compression
   compress: true,
-  // Use SWC minification instead of Terser for faster builds
-  swcMinify: true,
-  // Improve production performance
-  productionBrowserSourceMaps: false,
   // Configure HTTP response headers for better caching and performance
   async headers() {
     return [
@@ -87,14 +87,8 @@ const nextConfig = {
   },
   // Enable experimental features that improve performance
   experimental: {
-    // Use React Server Components to reduce client-side JavaScript
-    serverComponents: true,
-    // Enable concurrent features for smoother UI interactions
-    concurrentFeatures: true,
     // Optimize page loading
     optimizeCss: true,
-    // Remove unused CSS
-    optimizeImages: true,
     // Optimize for better performance on scroll
     scrollRestoration: true,
   },
@@ -119,12 +113,18 @@ const nextConfig = {
             implementation: ImageMinimizerPlugin.imageminMinify,
             options: {
               plugins: [
-                ['mozjpeg', { quality: 80 }],
-                ['optipng', { optimizationLevel: 5 }],
-                ['svgo', {
+                ["mozjpeg", { quality: 80 }],
+                ["optipng", { optimizationLevel: 5 }],
+                ["svgo", {
                   plugins: [
-                    { name: 'removeViewBox', active: false },
-                    { name: 'removeEmptyAttrs', active: false },
+                    {
+                      name: "removeViewBox",
+                      active: false,
+                    },
+                    {
+                      name: "removeEmptyAttrs",
+                      active: false,
+                    },
                   ],
                 }],
               ],
