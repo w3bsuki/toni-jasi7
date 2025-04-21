@@ -4,11 +4,6 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true'
   : (config) => config;
 
 const CompressionPlugin = require('compression-webpack-plugin');
-const { ImageMinimizerPlugin } = require('image-minimizer-webpack-plugin');
-const imagemin = require('imagemin');
-const imageminMozjpeg = require('imagemin-mozjpeg');
-const imageminOptipng = require('imagemin-optipng');
-const imageminSvgo = require('imagemin-svgo');
 
 const nextConfig = {
   reactStrictMode: true,
@@ -103,33 +98,6 @@ const nextConfig = {
           test: /\.(js|css|html|svg)$/,
           threshold: 10240,
           minRatio: 0.8,
-        })
-      );
-
-      // Optimize images
-      config.plugins.push(
-        new ImageMinimizerPlugin({
-          minimizer: {
-            implementation: ImageMinimizerPlugin.imageminMinify,
-            options: {
-              plugins: [
-                ["mozjpeg", { quality: 80 }],
-                ["optipng", { optimizationLevel: 5 }],
-                ["svgo", {
-                  plugins: [
-                    {
-                      name: "removeViewBox",
-                      active: false,
-                    },
-                    {
-                      name: "removeEmptyAttrs",
-                      active: false,
-                    },
-                  ],
-                }],
-              ],
-            },
-          },
         })
       );
 
