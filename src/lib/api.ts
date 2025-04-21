@@ -3,6 +3,9 @@ import { Product } from '@/types/product';
 import { products as newProducts } from '@/lib/data/products';
 import { products as oldProducts } from '@/data/products';
 
+// Define a consistent placeholder image path
+const placeholderImage = "/images/hats/placeholder.jpg";
+
 /**
  * Fetch featured collections from API
  */
@@ -62,7 +65,7 @@ export async function getTrendingProducts(): Promise<Product[]> {
       discount: product.discount,
       rating: product.rating,
       reviews: 50, // Add a default value for reviews
-      images: product.images || [],
+      images: product.images?.length ? product.images : [placeholderImage, placeholderImage],
       categories: [product.category || 'caps'],
       colors: product.colors || [],
       sizes: product.sizes || [],
@@ -72,9 +75,7 @@ export async function getTrendingProducts(): Promise<Product[]> {
     }));
   }
   
-  // Fallback to a simple product with one image if products array is empty
-  const fallbackImage = "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?q=80&w=1000&auto=format&fit=crop";
-  
+  // Fallback to a simple product with placeholder image
   return [
     {
       id: '1',
@@ -85,7 +86,7 @@ export async function getTrendingProducts(): Promise<Product[]> {
       discount: 0,
       rating: 4.5,
       reviews: 124,
-      images: [fallbackImage],
+      images: [placeholderImage, placeholderImage],
       categories: ['mens', 'caps'],
       colors: ['white', 'black', 'gray'],
       sizes: ['S', 'M', 'L', 'XL'],
@@ -108,20 +109,19 @@ export async function getAllProducts(): Promise<Product[]> {
     description: product.description || `A premium quality ${product.name} for all occasions.`,
     price: product.price,
     salePrice: product.discount ? product.price * (1 - product.discount / 100) : undefined,
-    images: product.images || [],
+    images: product.images?.length ? product.images : [placeholderImage, placeholderImage],
     collection: product.category,
     sizes: product.sizes || [],
     isNew: product.isNew || false,
     isSale: product.discount ? true : false,
     rating: product.rating,
     reviewCount: Math.floor(Math.random() * 100) + 5,
-    thumbnail: product.images[0], // Ensure thumbnail is always set to first image
+    thumbnail: product.images?.[0] || placeholderImage, // Ensure thumbnail is always set
     category: product.category || "caps",
     colors: product.colors || [],
   }));
   
   // Then process the old products - use placeholder images if needed
-  const placeholderImage = "/products/hat-placeholder.jpg";
   const processedOldProducts = oldProducts.map(product => ({
     id: product.id,
     name: product.name,
@@ -129,14 +129,14 @@ export async function getAllProducts(): Promise<Product[]> {
     description: product.description || `A premium quality ${product.name} for all occasions.`,
     price: product.price,
     salePrice: product.salePrice,
-    images: product.images.length > 0 ? product.images : [placeholderImage, placeholderImage],
+    images: product.images?.length ? product.images : [placeholderImage, placeholderImage],
     collection: product.collection || "caps",
     sizes: product.sizes || [],
     isNew: product.isNew || false,
     isSale: product.isSale || false,
     rating: 4.5, // Default rating
     reviewCount: Math.floor(Math.random() * 100) + 5,
-    thumbnail: product.images[0] || placeholderImage,
+    thumbnail: product.images?.[0] || placeholderImage,
     category: product.collection || "caps",
     colors: ["black", "white", "gray"], // Default colors
   }));

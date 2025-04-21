@@ -109,7 +109,7 @@ export function ProductGallery({ images, alt, badges = {} }: ProductGalleryProps
           transformOrigin: isZoomed ? `${zoomPosition.x}% ${zoomPosition.y}%` : "center center"
         }}>
           <Image
-            src={images[selectedImageIndex] || "/products/placeholder.jpg"}
+            src={images[selectedImageIndex] || "/images/hats/placeholder.jpg"}
             alt={`${alt} - Image ${selectedImageIndex + 1}`}
             fill={!isFullscreen}
             width={isFullscreen ? 1200 : undefined}
