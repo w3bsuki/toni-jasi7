@@ -59,15 +59,14 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <section className="w-full bg-black py-16 text-white md:py-20 dark:bg-black">
+    <section className="w-full bg-black py-8 text-white md:py-10 dark:bg-black">
       <footer className="flex flex-col items-center w-full">
-        <div className="mb-12 rounded-sm bg-white/5 p-8 backdrop-blur-sm md:p-12 w-full max-w-full mx-auto dark:bg-[#171717]/40">
-          <div className="flex flex-col items-center text-center px-6 md:px-8">
+        <div className="mb-8 rounded-sm bg-black p-6 md:p-12 w-full max-w-full mx-auto dark:bg-black">
+          <div className="flex flex-col items-center text-center px-4 md:px-8">
             <h2 className="max-w-[900px] text-3xl leading-tight font-bold tracking-wider uppercase text-balance md:text-4xl">
               Join the NoCAP Club
               <span className="text-white relative inline-block ml-2">
                 Today
-                <span className="bg-white/30 absolute bottom-1 left-0 h-1 w-full"></span>
               </span>
             </h2>
             <p className="mt-4 max-w-[650px] text-lg text-white/80">
@@ -85,8 +84,8 @@ export function Footer() {
         </div>
 
         {/* Newsletter Section */}
-        <div className="border-white/20 mb-12 border-b pb-12 w-full px-6 md:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+        <div className="border-white/20 mb-8 border-b pb-8 w-full px-4 md:px-8">
+          <div className="grid grid-cols-1 gap-6 lg:gap-10 lg:grid-cols-2">
             <div>
               <h3 className="mb-2 text-2xl font-medium">Stay Updated</h3>
               <p className="max-w-md text-white/70">
