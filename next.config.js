@@ -110,10 +110,14 @@ const nextConfig = {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name(module) {
+              // Safe handling of module.context
+              if (!module.context) return 'npm.unknown';
+              
               // Get the name of the npm package
-              const packageName = module.context.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-              )[1];
+              const match = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/);
+              if (!match) return 'npm.unknown';
+              
+              const packageName = match[1];
               // Return a nice clean package name
               return `npm.${packageName.replace('@', '')}`;
             },
