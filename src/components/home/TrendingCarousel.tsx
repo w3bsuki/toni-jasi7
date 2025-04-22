@@ -120,6 +120,8 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
         <div className={`carousel-track ${isPaused ? 'paused' : ''}`}>
           {duplicatedProducts.map((product, index) => {
             const isHovered = hoveredId === product.id + '-' + index;
+            // Get the ranking number for this product (1-based, mod by original products length)
+            const rankingNumber = (index % products.length) + 1;
             
             return (
               <div 
@@ -130,22 +132,20 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
               >
                 <div className={`product-card ${isHovered ? 'hovered' : ''}`}>
                   <div className="image-container">
-                    {product.images && product.images[0] && (
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 640px) 280px, (max-width: 768px) 340px, 380px"
-                        className="object-cover transition-transform duration-500"
-                        priority={index < 4}
-                      />
-                    )}
+                    <Image
+                      src={product.images[0] || "/images/hats/placeholder.jpg"}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 640px) 280px, (max-width: 768px) 340px, 380px"
+                      className="object-cover transition-transform duration-500"
+                      priority={index < 4}
+                    />
                     
                     {/* Secondary image */}
-                    {product.images && product.images.length > 1 && isHovered && (
+                    {isHovered && product.images.length > 1 && (
                       <div className="secondary-image">
                         <Image
-                          src={product.images[1]}
+                          src={product.images[1] || "/images/hats/placeholder.jpg"}
                           alt={`${product.name} - alternate view`}
                           fill
                           sizes="(max-width: 640px) 280px, (max-width: 768px) 340px, 380px"
@@ -154,7 +154,7 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
                       </div>
                     )}
                     
-                    {/* Quick View Button */}
+                    {/* Centered Quick View Button */}
                     <div className="quick-view-overlay">
                       <button 
                         className="quick-view-button"
@@ -188,15 +188,21 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
                   </div>
                   
                   <div className="info-container">
-                    {product.categories && product.categories.length > 0 && (
-                      <div className="category">
-                        {product.categories[0]}
-                      </div>
-                    )}
+                    {/* Ranking number instead of category */}
+                    <div className="ranking">
+                      #{rankingNumber}
+                    </div>
                     
                     <h3 className="title">
                       {product.name}
                     </h3>
+                    
+                    {/* PRICE DISPLAY - Prominently shown */}
+                    <div className="price-action">
+                      <div className="price">
+                        {formatPrice(product.price, product.discount)}
+                      </div>
+                    </div>
                     
                     <div className="rating-container">
                       {renderRating(product.rating)}
@@ -205,17 +211,14 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
                       )}
                     </div>
                     
-                    <div className="price-action">
-                      <div className="price">
-                        {formatPrice(product.price, product.discount)}
-                      </div>
-                      
+                    {/* Centered Add Button */}
+                    <div className="add-button-container">
                       <button 
                         className="add-button"
                         aria-label={`Add ${product.name} to cart`}
                       >
                         <ShoppingBag className="w-4 h-4" />
-                        <span>Add</span>
+                        <span>Add to Cart</span>
                       </button>
                     </div>
                   </div>
@@ -262,13 +265,13 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
         .carousel-container {
           width: 100%;
           overflow: hidden;
-          padding: 20px 0;
+          padding: 24px 0;
           margin-bottom: 10px;
         }
 
         .carousel-track {
           display: flex;
-          gap: 24px;
+          gap: 30px;
           padding: 0 40px;
           animation: infiniteScroll 60s linear infinite;
           will-change: transform;
@@ -285,59 +288,122 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
         
         /* Product Card Wrapper */
         .product-card-wrapper {
-          flex: 0 0 400px;
-          width: 400px;
-          height: 560px;
+          flex: 0 0 380px;
+          width: 380px;
+          height: 540px;
+          position: relative;
+          z-index: 1;
+          padding: 4px;
         }
         
         /* Product Card */
         .product-card {
           width: 100%;
           height: 100%;
-          border-radius: 16px;
+          border-radius: 20px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          background: linear-gradient(to bottom, rgba(30, 30, 30, 0.4), rgba(10, 10, 10, 0.8));
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          box-shadow: 
-            0 10px 30px rgba(0, 0, 0, 0.3),
-            inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(5px);
-          transition: all 0.3s ease;
+          background: linear-gradient(145deg, rgba(28, 28, 28, 0.7), rgba(18, 18, 18, 0.95));
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.04);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
           transform: translateY(0);
+          transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+          position: relative;
+          z-index: 1;
+        }
+        
+        .product-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            circle at 80% 0%,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 60%
+          );
+          opacity: 0.6;
+          z-index: 1;
+          pointer-events: none;
+        }
+        
+        /* Glowing effect on hover */
+        .product-card-wrapper::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          border-radius: 22px;
+          opacity: 0;
+          transition: opacity 0.3s ease, box-shadow 0.3s ease;
+          pointer-events: none;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0) 20%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0) 80%
+          );
+          border: 2px solid transparent;
+        }
+        
+        .product-card-wrapper:hover::before {
+          opacity: 1;
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.1),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
         }
         
         .product-card.hovered {
-          transform: translateY(-8px);
-          border: 1px solid rgba(255, 255, 255, 0.15);
+          transform: translateY(-8px) scale(1.02);
           box-shadow: 
-            0 15px 40px rgba(0, 0, 0, 0.4), 
-            0 0 20px rgba(255, 255, 255, 0.05),
-            inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+            0 20px 40px rgba(0, 0, 0, 0.4),
+            0 0 20px rgba(255, 255, 255, 0.05);
         }
         
         /* Image Container */
         .image-container {
           position: relative;
           width: 100%;
-          height: 380px;
+          height: 360px;
           overflow: hidden;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .image-container::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            transparent 75%,
+            rgba(0, 0, 0, 0.6) 100%
+          );
+          z-index: 3;
+          opacity: 0.7;
+          transition: opacity 0.3s ease;
+        }
+        
+        .product-card.hovered .image-container::after {
+          opacity: 0.5;
         }
         
         .product-card.hovered .image-container img {
           transform: scale(1.1);
+          filter: brightness(1.1) contrast(1.05);
         }
         
         .image-container img {
-          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+          filter: saturate(1.05);
         }
         
         .secondary-image {
           position: absolute;
           inset: 0;
           opacity: 0;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.5s ease;
           z-index: 2;
         }
         
@@ -353,197 +419,201 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
           align-items: center;
           justify-content: center;
           background: rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(3px);
+          backdrop-filter: blur(2px);
           opacity: 0;
-          visibility: hidden;
-          transition: all 0.3s ease;
+          transition: opacity 0.3s ease;
           z-index: 10;
+          pointer-events: none;
         }
         
-        .product-card.hovered .quick-view-overlay {
+        .product-card:hover .quick-view-overlay {
           opacity: 1;
-          visibility: visible;
+          pointer-events: auto;
         }
         
         .quick-view-button {
           display: flex;
           align-items: center;
-          gap: 8px;
-          background: rgba(255, 255, 255, 0.1);
-          color: #fff;
+          justify-content: center;
+          gap: 10px;
+          background: white;
+          color: black;
+          font-size: 13px;
           font-weight: 600;
-          padding: 10px 16px;
-          border-radius: 8px;
+          padding: 10px 24px;
+          border-radius: 12px;
+          border: none;
+          cursor: pointer;
           transform: translateY(20px);
-          transition: all 0.3s ease;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 
-            0 4px 12px rgba(0, 0, 0, 0.3),
-            inset 0 1px 1px rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(5px);
+          opacity: 0;
+          transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
         
-        .product-card.hovered .quick-view-button {
+        .product-card:hover .quick-view-button {
           transform: translateY(0);
+          opacity: 1;
         }
         
         .quick-view-button:hover {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          transform: translateY(-5px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+          background: rgba(255, 255, 255, 0.9);
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
         
         /* Product Badges */
         .discount-badge, .new-badge {
           position: absolute;
-          top: 16px;
-          left: 16px;
-          padding: 6px 12px;
-          border-radius: 30px;
-          font-size: 0.75rem;
-          font-weight: bold;
-          z-index: 5;
-          letter-spacing: 0.03em;
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 
-            0 4px 12px rgba(0, 0, 0, 0.3),
-            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+          top: 15px;
+          left: 15px;
+          padding: 4px 10px;
+          font-size: 12px;
+          font-weight: 700;
+          border-radius: 6px;
+          z-index: 10;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         
         .discount-badge {
-          background: rgba(0, 0, 0, 0.8);
+          background: #e53e3e;
           color: white;
         }
         
         .new-badge {
-          background: rgba(20, 20, 20, 0.8);
+          background: #38a169;
           color: white;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
         
         /* Action Buttons */
         .action-buttons {
           position: absolute;
-          top: 16px;
-          right: 16px;
+          top: 15px;
+          right: 15px;
           display: flex;
           flex-direction: column;
           gap: 8px;
-          z-index: 5;
+          z-index: 15;
         }
         
         .action-button {
-          width: 36px;
-          height: 36px;
+          width: 34px;
+          height: 34px;
           border-radius: 50%;
+          background: rgba(255, 255, 255, 0.9);
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(20, 20, 20, 0.8);
-          color: white;
+          border: none;
+          cursor: pointer;
+          transform: translateX(50px);
           opacity: 0;
-          transform: translateX(20px);
-          transition: all 0.3s ease;
-          backdrop-filter: blur(5px);
-          box-shadow: 
-            0 4px 12px rgba(0, 0, 0, 0.3),
-            inset 0 1px 1px rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         
-        .product-card.hovered .action-button {
-          opacity: 1;
+        .product-card:hover .action-button {
           transform: translateX(0);
+          opacity: 1;
         }
         
         .action-button:hover {
-          background: rgba(40, 40, 40, 0.9);
-          color: white;
-          transform: translateY(-3px);
-          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+          background: white;
+        }
+        
+        .wishlist-button {
+          transition-delay: 0.1s;
+        }
+        
+        /* Ranking Style */
+        .ranking {
+          font-size: 11px;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.5);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 5px;
         }
         
         /* Info Container */
         .info-container {
-          flex: 1;
           padding: 16px;
           display: flex;
           flex-direction: column;
-          background: rgba(15, 15, 15, 0.95);
-          backdrop-filter: blur(10px);
-          border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .category {
-          font-size: 0.75rem;
-          color: #a1a1aa;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          margin-bottom: 4px;
+          gap: 8px;
+          flex: 1;
+          z-index: 5;
         }
         
         .title {
-          font-size: 1.125rem;
+          font-size: 16px;
           font-weight: 600;
           color: white;
-          margin-bottom: 8px;
-          height: 48px;
+          margin-bottom: 4px;
+          transition: color 0.3s ease;
+          line-height: 1.3;
+          max-height: 42px;
+          overflow: hidden;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
-          overflow: hidden;
+        }
+        
+        /* Price & Action Styling */
+        .price-action {
+          margin: 6px 0;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+        
+        .price {
+          font-size: 18px;
+          font-weight: 700;
+          color: white;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding-top: 8px;
+          width: 100%;
         }
         
         .rating-container {
           display: flex;
           align-items: center;
-          gap: 8px;
-          margin-bottom: 12px;
+          gap: 10px;
+          margin-bottom: 5px;
         }
         
         .reviews {
-          font-size: 0.75rem;
-          color: #a1a1aa;
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.6);
         }
         
-        .price-action {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
+        /* Add Button */
+        .add-button-container {
           margin-top: auto;
-          padding-top: 12px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .price {
-          display: flex;
-          flex-direction: column;
         }
         
         .add-button {
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
-          background: rgba(10, 10, 10, 0.9);
-          color: white;
+          background: white;
+          color: black;
+          font-size: 13px;
+          font-weight: 600;
           padding: 8px 16px;
-          border-radius: 8px;
-          font-weight: 500;
-          font-size: 0.875rem;
-          transition: all 0.2s ease;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(5px);
-          box-shadow: 
-            0 4px 12px rgba(0, 0, 0, 0.3),
-            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+          width: 100%;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          border: none;
+          transform: translateY(0);
         }
         
         .add-button:hover {
+          background: rgba(255, 255, 255, 0.9);
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-          background: rgba(30, 30, 30, 0.9);
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
         
         /* Shop All Button */
@@ -551,25 +621,28 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
           position: relative;
           overflow: hidden;
           background: transparent;
-          border: 1px solid white;
+          border: 1px solid rgba(255, 255, 255, 0.3);
           color: white;
           padding: 12px 24px;
-          border-radius: 8px;
-          font-weight: 700;
+          border-radius: 14px;
+          font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           font-size: 0.875rem;
-          transition: color 0.3s ease;
+          transition: all 0.3s ease;
         }
         
         .shop-all-button:hover {
-          color: black;
+          background: rgba(255, 255, 255, 0.1);
+          border-color: white;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
         
         .button-bg {
           position: absolute;
           inset: 0;
           background: white;
+          z-index: -1;
           transform: scaleX(0);
           transform-origin: left;
           transition: transform 0.3s ease;
@@ -582,35 +655,13 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
         /* Responsive Styles */
         @media (max-width: 768px) {
           .carousel-track {
-            gap: 16px;
+            gap: 20px;
             padding: 0 20px;
           }
           
           .product-card-wrapper {
-            flex: 0 0 360px;
-            width: 360px;
-            height: 540px;
-          }
-          
-          .image-container {
-            height: 360px;
-          }
-          
-          .quick-view-button {
-            padding: 8px 14px;
-            font-size: 0.875rem;
-          }
-        }
-        
-        @media (max-width: 639px) {
-          .carousel-track {
-            gap: 12px;
-            padding: 0 16px;
-          }
-          
-          .product-card-wrapper {
-            flex: 0 0 320px;
-            width: 320px;
+            flex: 0 0 340px;
+            width: 340px;
             height: 500px;
           }
           
@@ -618,27 +669,65 @@ export function TrendingCarousel({ products }: TrendingCarouselProps) {
             height: 320px;
           }
           
-          .info-container {
-            padding: 12px;
-          }
-          
-          .title {
-            font-size: 1rem;
-            height: 44px;
+          .add-button {
+            width: 90%;
+            padding: 10px 18px;
+            font-size: 0.875rem;
           }
           
           .quick-view-button {
-            padding: 6px 12px;
+            padding: 10px 22px;
+            font-size: 0.875rem;
+          }
+          
+          .info-container {
+            padding: 16px;
+          }
+        }
+        
+        @media (max-width: 639px) {
+          .carousel-track {
+            gap: 16px;
+            padding: 0 16px;
+          }
+          
+          .product-card-wrapper {
+            flex: 0 0 300px;
+            width: 300px;
+            height: 460px;
+          }
+          
+          .image-container {
+            height: 280px;
+          }
+          
+          .info-container {
+            padding: 14px;
+          }
+          
+          .title {
+            font-size: 1.1rem;
+            height: 44px;
+          }
+          
+          .add-button {
+            width: 100%;
+            padding: 8px 14px;
+            font-size: 0.75rem;
+          }
+          
+          .quick-view-button {
+            padding: 8px 16px;
             font-size: 0.75rem;
           }
           
           .action-button {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
           }
           
           .product-card.hovered {
-            transform: translateY(-4px);
+            transform: translateY(-4px) scale(1.01);
           }
         }
       `}</style>

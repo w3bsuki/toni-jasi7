@@ -1,46 +1,52 @@
-import { Collection } from "@/types/collection";
+import { Collection } from "@/lib/types";
 
 export const collections: Collection[] = [
   {
     id: "1",
     name: "Snapbacks",
     slug: "snapbacks",
-    description: "Stylish snapback hats for a bold look",
-    image: "/products/hat-placeholder.jpg",
+    description: "Adjustable snapback hats with flat brims and structured crowns.",
+    image: "/images/hats/placeholder1.jpg",
+    products: []
   },
   {
     id: "2",
     name: "Dad Hats",
     slug: "dad-hats",
-    description: "Classic and comfortable dad hats for everyday wear",
-    image: "/products/hat-placeholder.jpg",
+    description: "Relaxed, low-profile caps with curved brims and unstructured crowns.",
+    image: "/images/hats/placeholder1.jpg",
+    products: []
   },
   {
     id: "3",
     name: "Fitted Caps",
     slug: "fitted-caps",
-    description: "Premium fitted caps for the perfect look",
-    image: "/products/hat-placeholder.jpg",
+    description: "Structured caps with flat brims that come in specific sizes for a perfect fit.",
+    image: "/images/hats/placeholder1.jpg",
+    products: []
   },
   {
     id: "4",
     name: "Beanies",
     slug: "beanies",
-    description: "Warm and cozy beanies for cold weather",
-    image: "/products/hat-placeholder.jpg",
+    description: "Warm, knitted caps that fit snugly on the head, perfect for cold weather.",
+    image: "/images/hats/placeholder1.jpg",
+    products: []
   },
   {
     id: "5",
     name: "Bucket Hats",
     slug: "bucket-hats",
-    description: "Trendy bucket hats for a casual style",
-    image: "/products/hat-placeholder.jpg",
+    description: "Round, wide-brimmed hats that slope downward, offering sun protection and a casual look.",
+    image: "/images/hats/placeholder1.jpg",
+    products: []
   },
   {
     id: "6",
     name: "Limited Edition",
     slug: "limited-edition",
-    description: "Exclusive limited edition designs",
-    image: "/products/hat-placeholder.jpg",
+    description: "Exclusive, limited-run designs that are only available for a short time.",
+    image: "/images/hats/placeholder1.jpg",
+    products: []
   },
 ]; 

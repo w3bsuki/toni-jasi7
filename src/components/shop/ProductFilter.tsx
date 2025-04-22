@@ -5,14 +5,14 @@ import { Check, ChevronDown, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export type FilterOptions = {
+export interface FilterOptions {
   collections: string[];
   priceRanges: string[];
   sizes: string[];
   inStock: boolean;
   onSale: boolean;
   newArrivals: boolean;
-};
+}
 
 interface ProductFilterProps {
   availableFilters: {

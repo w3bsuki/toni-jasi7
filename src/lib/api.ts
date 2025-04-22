@@ -4,7 +4,45 @@ import { products as newProducts } from '@/lib/data/products';
 import { products as oldProducts } from '@/data/products';
 
 // Define a consistent placeholder image path
-const placeholderImage = "/images/hats/placeholder.jpg";
+const placeholderImage = "/images/hats/placeholder1.jpg";
+
+/**
+ * Normalize product data to ensure consistent format across the application
+ */
+export function normalizeProduct(product: any): Product {
+  // Calculate sale price if discount is provided
+  let salePrice = product.salePrice;
+  if (!salePrice && product.discount && product.discount > 0) {
+    salePrice = product.price * (1 - product.discount / 100);
+  }
+
+  return {
+    id: product.id || `product-${Math.random().toString(36).substr(2, 9)}`,
+    name: product.name || "Untitled Product",
+    slug: product.slug || product.name?.toLowerCase().replace(/\s+/g, '-') || 'untitled-product',
+    description: product.description || `A premium quality hat for all occasions.`,
+    price: typeof product.price === 'number' ? product.price : 0,
+    salePrice: salePrice || undefined,
+    discount: typeof product.discount === 'number' ? product.discount : 0,
+    images: Array.isArray(product.images) && product.images.length ? 
+      product.images : [placeholderImage, placeholderImage],
+    colors: Array.isArray(product.colors) ? product.colors : [],
+    sizes: Array.isArray(product.sizes) ? product.sizes : [],
+    collection: product.collection || product.category || "caps",
+    categories: Array.isArray(product.categories) ? 
+      product.categories : product.category ? [product.category] : ["caps"],
+    thumbnail: product.thumbnail || (Array.isArray(product.images) && product.images[0]) || placeholderImage,
+    isFeatured: Boolean(product.isFeatured),
+    isNew: Boolean(product.isNew),
+    isSale: Boolean(product.isSale) || (product.discount && product.discount > 0) || (product.salePrice && product.salePrice < product.price),
+    inStock: product.inStock !== false, // Default to true unless explicitly false
+    rating: typeof product.rating === 'number' ? product.rating : 4.0,
+    reviews: product.reviews || product.reviewCount || 0,
+    reviewCount: product.reviewCount || product.reviews || 0,
+    createdAt: product.createdAt || new Date().toISOString(),
+    updatedAt: product.updatedAt || new Date().toISOString(),
+  };
+}
 
 /**
  * Fetch featured collections from API
@@ -49,52 +87,104 @@ export async function getFeaturedCollections(): Promise<Collection[]> {
   return featuredCollections;
 }
 
+// Mock data for trending products
+const trendingProductsData: Product[] = [
+  {
+    id: '1',
+    name: 'Classic Fedora',
+    slug: 'classic-fedora',
+    description: 'A timeless classic that adds sophistication to any outfit',
+    price: 59.99,
+    images: ['/images/hats/placeholder1.jpg', '/images/hats/placeholder1.jpg'],
+    categories: ['fedora', 'formal'],
+    colors: ['black', 'brown', 'navy'],
+    sizes: ['S', 'M', 'L', 'XL'],
+    isNew: true,
+    isSale: false,
+    isFeatured: true,
+    collection: 'formal',
+    thumbnail: '/images/hats/placeholder1.jpg',
+    inStock: true,
+    rating: 4.5,
+    reviewCount: 12,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: '2',
+    name: 'Summer Straw Hat',
+    slug: 'summer-straw-hat',
+    description: 'Light and comfortable straw hat for hot summer days',
+    price: 45.99,
+    salePrice: 35.99,
+    images: ['/images/hats/placeholder1.jpg', '/images/hats/placeholder1.jpg'],
+    categories: ['straw', 'summer'],
+    colors: ['natural', 'white'],
+    sizes: ['M', 'L'],
+    isNew: false,
+    isSale: true,
+    isFeatured: true,
+    collection: 'summer',
+    thumbnail: '/images/hats/placeholder1.jpg',
+    inStock: true,
+    rating: 4.2,
+    reviewCount: 8,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: '3',
+    name: 'Vintage Newsboy Cap',
+    slug: 'vintage-newsboy-cap',
+    description: 'Classic newsboy style with a modern twist',
+    price: 39.99,
+    images: ['/images/hats/placeholder1.jpg', '/images/hats/placeholder1.jpg'],
+    categories: ['cap', 'casual', 'vintage'],
+    colors: ['gray', 'black', 'brown', 'navy'],
+    sizes: ['S', 'M', 'L'],
+    isNew: false,
+    isSale: false,
+    isFeatured: true,
+    collection: 'casual',
+    thumbnail: '/images/hats/placeholder1.jpg',
+    inStock: true,
+    rating: 4.0,
+    reviewCount: 15,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: '4',
+    name: 'Winter Beanie',
+    slug: 'winter-beanie',
+    description: 'Warm knitted beanie for cold weather',
+    price: 29.99,
+    salePrice: 24.99,
+    images: ['/images/hats/placeholder1.jpg', '/images/hats/placeholder1.jpg'],
+    categories: ['beanie', 'winter'],
+    colors: ['gray', 'black', 'navy', 'red'],
+    sizes: ['one-size'],
+    isNew: true,
+    isSale: true,
+    isFeatured: true,
+    collection: 'winter',
+    thumbnail: '/images/hats/placeholder1.jpg',
+    inStock: true,
+    rating: 4.8,
+    reviewCount: 20,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
+
 /**
- * Fetch trending products from API
+ * Get trending products
+ * @returns Array of trending products
  */
 export async function getTrendingProducts(): Promise<Product[]> {
-  // Use our products from products.ts with the Unsplash images
-  if (newProducts && newProducts.length > 0) {
-    // Ensure our products match the expected Product interface
-    return newProducts.map(product => ({
-      id: product.id,
-      name: product.name,
-      slug: product.slug,
-      description: product.description,
-      price: product.price,
-      discount: product.discount,
-      rating: product.rating,
-      reviews: 50, // Add a default value for reviews
-      images: product.images?.length ? product.images : [placeholderImage, placeholderImage],
-      categories: [product.category || 'caps'],
-      colors: product.colors || [],
-      sizes: product.sizes || [],
-      isNew: product.isNew || false,
-      isFeatured: true,
-      inStock: true
-    }));
-  }
-  
-  // Fallback to a simple product with placeholder image
-  return [
-    {
-      id: '1',
-      name: 'Classic White Baseball Cap',
-      slug: 'classic-white-baseball-cap',
-      description: 'A timeless white baseball cap with a clean design. Perfect for casual outings.',
-      price: 29.99,
-      discount: 0,
-      rating: 4.5,
-      reviews: 124,
-      images: [placeholderImage, placeholderImage],
-      categories: ['mens', 'caps'],
-      colors: ['white', 'black', 'gray'],
-      sizes: ['S', 'M', 'L', 'XL'],
-      isNew: true,
-      isFeatured: true,
-      inStock: true
-    }
-  ];
+  // In a real application, this would make an API call
+  // For now, we'll return mock data
+  return trendingProductsData;
 }
 
 /**
@@ -102,44 +192,10 @@ export async function getTrendingProducts(): Promise<Product[]> {
  */
 export async function getAllProducts(): Promise<Product[]> {
   // First process the new products with unsplash images
-  const processedNewProducts = newProducts.map(product => ({
-    id: product.id,
-    name: product.name,
-    slug: product.slug,
-    description: product.description || `A premium quality ${product.name} for all occasions.`,
-    price: product.price,
-    salePrice: product.discount ? product.price * (1 - product.discount / 100) : undefined,
-    images: product.images?.length ? product.images : [placeholderImage, placeholderImage],
-    collection: product.category,
-    sizes: product.sizes || [],
-    isNew: product.isNew || false,
-    isSale: product.discount ? true : false,
-    rating: product.rating,
-    reviewCount: Math.floor(Math.random() * 100) + 5,
-    thumbnail: product.images?.[0] || placeholderImage, // Ensure thumbnail is always set
-    category: product.category || "caps",
-    colors: product.colors || [],
-  }));
+  const processedNewProducts = newProducts.map(normalizeProduct);
   
-  // Then process the old products - use placeholder images if needed
-  const processedOldProducts = oldProducts.map(product => ({
-    id: product.id,
-    name: product.name,
-    slug: product.slug,
-    description: product.description || `A premium quality ${product.name} for all occasions.`,
-    price: product.price,
-    salePrice: product.salePrice,
-    images: product.images?.length ? product.images : [placeholderImage, placeholderImage],
-    collection: product.collection || "caps",
-    sizes: product.sizes || [],
-    isNew: product.isNew || false,
-    isSale: product.isSale || false,
-    rating: 4.5, // Default rating
-    reviewCount: Math.floor(Math.random() * 100) + 5,
-    thumbnail: product.images?.[0] || placeholderImage,
-    category: product.collection || "caps",
-    colors: ["black", "white", "gray"], // Default colors
-  }));
+  // Then process the old products
+  const processedOldProducts = oldProducts.map(normalizeProduct);
   
   // Combine both product sets
   return [...processedNewProducts, ...processedOldProducts];

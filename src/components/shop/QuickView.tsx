@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Heart, Star, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product } from '@/lib/types';
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   Dialog,
   DialogContent,
@@ -21,26 +22,46 @@ interface QuickViewProps {
 }
 
 export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  // Log component state for debugging
+  console.log("QuickView component rendered", { product, isOpen });
+  
+  // State for gallery images
+  const [selectedImage, setSelectedImage] = useState<string>("/images/hats/placeholder1.jpg");
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const placeholderImages = ["/images/hats/placeholder1.jpg", "/images/hats/placeholder1.jpg"];
+  
+  // State for product configuration
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
 
+  // Log to debug
   useEffect(() => {
-    if (product && product.images && product.images.length > 0) {
-      setSelectedImage(product.images[0]);
+    if (isOpen) {
+      console.log("QuickView opened", { product, isOpen });
     }
-    
-    // Reset selections when product changes
+  }, [product, isOpen]);
+
+  // Reset state when product changes
+  useEffect(() => {
     if (product) {
-      setSelectedColor(product.colors && product.colors.length > 0 ? product.colors[0] : null);
-      setSelectedSize(product.sizes && product.sizes.length > 0 ? product.sizes[0] : null);
+      // Always set the placeholder image
+      setSelectedImage(product.images?.[0] || placeholderImages[0]);
+      setSelectedImageIndex(0);
+      
+      // Reset color, size, and quantity
+      setSelectedColor(null);
+      setSelectedSize(null);
       setQuantity(1);
     }
   }, [product]);
 
-  if (!product) return null;
+  // Safeguard against null product
+  if (!product) {
+    console.warn("QuickView received null product");
+    return null;
+  }
 
   // Format price with discount
   const formatPrice = (price: number, discount: number) => {
@@ -103,21 +124,17 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
     );
   };
 
-  // Handle image navigation
+  // Handle image navigation - simplified to cycle through placeholder images
   const handlePrevImage = () => {
-    if (!product.images || product.images.length <= 1) return;
-    
-    const currentIndex = product.images.findIndex(img => img === selectedImage);
-    const prevIndex = currentIndex <= 0 ? product.images.length - 1 : currentIndex - 1;
-    setSelectedImage(product.images[prevIndex]);
+    const newIndex = selectedImageIndex === 0 ? placeholderImages.length - 1 : selectedImageIndex - 1;
+    setSelectedImageIndex(newIndex);
+    setSelectedImage(placeholderImages[newIndex]);
   };
   
   const handleNextImage = () => {
-    if (!product.images || product.images.length <= 1) return;
-    
-    const currentIndex = product.images.findIndex(img => img === selectedImage);
-    const nextIndex = currentIndex >= product.images.length - 1 ? 0 : currentIndex + 1;
-    setSelectedImage(product.images[nextIndex]);
+    const newIndex = selectedImageIndex === placeholderImages.length - 1 ? 0 : selectedImageIndex + 1;
+    setSelectedImageIndex(newIndex);
+    setSelectedImage(placeholderImages[newIndex]);
   };
 
   // Add to cart animation
@@ -129,7 +146,7 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[800px] p-0 overflow-hidden bg-gradient-to-b from-zinc-900 to-black border border-zinc-800 rounded-xl shadow-2xl max-h-[80vh]">
+      <DialogContent className="sm:max-w-[800px] p-0 overflow-hidden bg-gradient-to-b from-zinc-900 to-black border border-zinc-800 rounded-xl shadow-2xl max-h-[80vh] z-[9999]">
         <button 
           onClick={onClose}
           className="absolute right-4 top-4 z-30 bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white rounded-full p-1.5 transition-all"
@@ -140,64 +157,68 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-5 h-full">
           {/* Left side - Image - Takes 2 columns out of 5 */}
-          <div className="relative md:col-span-2 aspect-[4/3] md:aspect-auto overflow-hidden bg-zinc-950 group">
-            {selectedImage && (
-              <Image 
-                src={selectedImage} 
-                alt={product.name} 
-                fill 
-                sizes="(max-width: 768px) 100vw, 40vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                priority
-              />
-            )}
-            
-            {/* Image navigation */}
-            {product.images && product.images.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrevImage}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  onClick={handleNextImage}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </>
-            )}
-            
-            {/* Thumbnails */}
-            {product.images && product.images.length > 1 && (
-              <div className="absolute bottom-3 left-0 right-0 flex justify-center">
-                <div className="flex gap-1.5 bg-black/50 backdrop-blur-md p-1 rounded-lg">
-                  {product.images.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedImage(img)}
-                      className={`w-10 h-10 relative rounded-md overflow-hidden transition-all border ${
-                        selectedImage === img ? 'border-white scale-105' : 'border-transparent opacity-70 hover:opacity-100'
-                      }`}
-                      title={`View ${product.name} - image ${idx + 1}`}
-                      aria-label={`View ${product.name} - image ${idx + 1}`}
-                    >
-                      <Image
-                        src={img}
-                        alt={`${product.name} - view ${idx + 1}`}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
+          <div className="relative md:col-span-2 overflow-hidden bg-zinc-950 group">
+            <AspectRatio ratio={4/3} className="w-full h-full">
+              <div className="relative w-full h-full">
+                <Image 
+                  src={selectedImage}
+                  alt={product?.name || "Product image"} 
+                  fill 
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  priority
+                />
+                
+                {/* Subtle gradient overlay for better control visibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-            )}
+            </AspectRatio>
+           
+            {/* Image navigation - Show navigation arrows */}
+            <div className="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 flex justify-between px-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                onClick={handlePrevImage}
+                className="bg-black/40 hover:bg-black/70 text-white p-1.5 rounded-full backdrop-blur-sm transition-all"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={handleNextImage}
+                className="bg-black/40 hover:bg-black/70 text-white p-1.5 rounded-full backdrop-blur-sm transition-all"
+                aria-label="Next image"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+            
+            {/* Thumbnails - Show placeholder thumbnails */}
+            <div className="absolute bottom-3 left-0 right-0 flex justify-center">
+              <div className="flex gap-1.5 bg-black/50 backdrop-blur-md p-1 rounded-lg">
+                {placeholderImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setSelectedImage(img);
+                      setSelectedImageIndex(idx);
+                    }}
+                    className={`w-10 h-10 relative rounded-md overflow-hidden transition-all border ${
+                      selectedImageIndex === idx ? 'border-white scale-105' : 'border-transparent opacity-70 hover:opacity-100'
+                    }`}
+                    title={`View ${product.name} - image ${idx + 1}`}
+                    aria-label={`View ${product.name} - image ${idx + 1}`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product.name} - view ${idx + 1}`}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
             
             {/* Tags */}
             <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
@@ -255,22 +276,21 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
               {/* Colors */}
               {product.colors && product.colors.length > 0 && (
                 <div className="mb-3">
-                  <h4 className="text-xs font-semibold text-white mb-1.5 flex justify-between">
-                    Color: <span className="text-gray-400">{selectedColor}</span>
+                  <h4 className="text-sm font-semibold text-white mb-2">
+                    Color: <span className="text-gray-400 ml-1">{selectedColor || "Select a color"}</span>
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2.5 border-b border-zinc-800 pb-3">
                     {product.colors.map((color, idx) => (
                       <button
                         key={idx}
                         onClick={() => setSelectedColor(color)}
-                        className={`relative w-7 h-7 rounded-full transition-all ${
+                        className={`relative w-8 h-8 rounded-full transition-all ${
                           selectedColor === color 
-                            ? 'ring-1 ring-white ring-offset-1 ring-offset-black scale-110' 
-                            : 'hover:scale-110'
+                            ? 'ring-2 ring-white scale-110' 
+                            : 'ring-1 ring-white/30 hover:ring-white/70 hover:scale-105'
                         }`}
                         style={{ 
                           backgroundColor: color,
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
                         }}
                         aria-label={`Select ${color} color`}
                         title={`Select color: ${color}`}
@@ -291,19 +311,19 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
               {/* Sizes */}
               {product.sizes && product.sizes.length > 0 && (
                 <div className="mb-3">
-                  <h4 className="text-xs font-semibold text-white mb-1.5 flex justify-between">
-                    Size: <span className="text-gray-400">{selectedSize}</span>
+                  <h4 className="text-sm font-semibold text-white mb-2">
+                    Size: <span className="text-gray-400 ml-1">{selectedSize || "Select a size"}</span>
                   </h4>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-2 border-b border-zinc-800 pb-3">
                     {product.sizes.map((size, idx) => (
                       <button
                         key={idx}
                         onClick={() => setSelectedSize(size)}
-                        className={`min-w-[36px] h-8 px-1.5 text-center transition-all ${
+                        className={`min-w-[40px] h-9 px-2 text-center transition-all border ${
                           selectedSize === size
-                            ? 'bg-white text-black font-bold'
-                            : 'bg-zinc-800 hover:bg-zinc-700 text-white'
-                        } rounded-md text-xs`}
+                            ? 'bg-white text-black font-medium border-white'
+                            : 'bg-black border-white/30 hover:border-white/70 text-white'
+                        } rounded-md text-sm`}
                         title={`Select size: ${size}`}
                       >
                         {size}
@@ -314,22 +334,22 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
               )}
               
               {/* Quantity */}
-              <div className="mb-3">
-                <h4 className="text-xs font-semibold text-white mb-1.5">Quantity:</h4>
-                <div className="flex h-8 max-w-[100px]">
+              <div className="mb-4">
+                <h4 className="text-sm font-semibold text-white mb-2">Quantity:</h4>
+                <div className="flex h-10 max-w-[140px] border border-white/30 rounded-md overflow-hidden">
                   <button 
                     onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                    className="w-8 bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 text-white rounded-l-md"
+                    className="w-10 bg-black border-r border-white/30 flex items-center justify-center hover:bg-black hover:border-white/70 text-white transition-colors"
                     disabled={quantity <= 1}
                   >
                     -
                   </button>
-                  <div className="flex-1 bg-zinc-900 flex items-center justify-center text-white text-xs">
+                  <div className="flex-1 bg-black flex items-center justify-center text-white font-medium">
                     {quantity}
                   </div>
                   <button 
                     onClick={() => setQuantity(prev => prev + 1)}
-                    className="w-8 bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 text-white rounded-r-md"
+                    className="w-10 bg-black border-l border-white/30 flex items-center justify-center hover:bg-black hover:border-white/70 text-white transition-colors"
                   >
                     +
                   </button>

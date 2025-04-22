@@ -51,7 +51,7 @@ export default function ProductCard({
         <Link href={`/products/${product.slug}`} className="block flex-shrink-0 w-1/3">
           <div className="aspect-square relative">
             <Image
-              src={product.images[currentImageIndex] || "/images/hats/placeholder.jpg"}
+              src={product.images[currentImageIndex] || "/images/hats/placeholder1.jpg"}
               alt={product.name}
               fill
               className="object-cover"
@@ -126,7 +126,7 @@ export default function ProductCard({
         <Link href={`/products/${product.slug}`} className="block">
           <div className="aspect-[4/3] relative">
             <Image
-              src={product.images[currentImageIndex] || "/images/hats/placeholder.jpg"}
+              src={product.images[currentImageIndex] || "/images/hats/placeholder1.jpg"}
               alt={product.name}
               fill
               className="object-cover"
@@ -171,7 +171,7 @@ export default function ProductCard({
       <Link href={`/products/${product.slug}`} className="block">
         <div className="aspect-square relative">
           <Image
-            src={product.images[currentImageIndex] || "/images/hats/placeholder.jpg"}
+            src={product.images[currentImageIndex] || "/images/hats/placeholder1.jpg"}
             alt={product.name}
             fill
             className="object-cover"

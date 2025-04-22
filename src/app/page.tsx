@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Hero } from '@/components/home/Hero';
 import { SignupCarousel } from '@/components/home/SignupCarousel';
 import { FeaturedCollections } from '@/components/home/FeaturedCollections';
+import { EnhancedTrendingCarousel } from '@/components/home/EnhancedTrendingCarousel';
 import { Collection, Product } from '@/lib/types';
 import { getFeaturedCollections, getTrendingProducts } from '@/lib/api';
 
@@ -20,17 +21,19 @@ export default async function Home() {
         subtitle="Discover our premium hat collection crafted with exceptional quality materials and attention to detail."
         ctaText="Shop Now"
         ctaLink="/collections"
-        imageUrl="/products/hat-placeholder.jpg"
+        imageUrl="/images/hats/placeholder1.jpg"
       />
       
       {/* Full-width SignupCarousel directly below Hero */}
       <SignupCarousel />
       
-      {/* Full-width FeaturedCollections with Trending Products */}
+      {/* Full-width FeaturedCollections */}
       <FeaturedCollections 
         collections={collections} 
-        trendingProducts={trendingProducts} 
       />
+
+      {/* Enhanced Trending Carousel */}
+      <EnhancedTrendingCarousel products={trendingProducts} />
     </div>
   );
 }

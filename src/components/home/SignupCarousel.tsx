@@ -100,7 +100,7 @@ export function SignupCarousel() {
   }
 
   return (
-    <div className="bg-black text-white h-16 w-full relative overflow-hidden border-y border-white/10"
+    <div className="bg-black text-white h-16 w-full relative overflow-hidden border-y-2 border-white/25"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -110,10 +110,10 @@ export function SignupCarousel() {
             <div key={`${item.id}-${index}`} className="carousel-item">
               <div className="item-container">
                 <div className="flex items-center">
-                  <span className="flex items-center justify-center w-8 h-8">
+                  <span className="flex items-center justify-center w-9 h-9 bg-black border-2 border-white/30 rounded-full mr-3">
                     {item.icon}
                   </span>
-                  <span className="text-xs font-bold tracking-wider uppercase mr-4">
+                  <span className="text-white text-xs font-bold tracking-wider uppercase mr-4">
                     {item.text}
                   </span>
                 </div>
@@ -122,7 +122,7 @@ export function SignupCarousel() {
                   <div className="button-wrap">
                     <button 
                       onClick={item.cta.action}
-                      className="btn-cta flex items-center justify-center relative overflow-hidden group h-9 px-5 py-0 bg-white text-black border border-white rounded"
+                      className="btn-cta flex items-center justify-center relative overflow-hidden group h-9 px-6 py-0 bg-white text-black border-2 border-white rounded-md"
                     >
                       <span className="button-text">
                         {item.cta.text}
@@ -134,13 +134,13 @@ export function SignupCarousel() {
               </div>
               
               {/* Add visual separator between items */}
-              <Separator orientation="vertical" className="h-10 ml-10 mr-10 bg-white/10" />
+              <Separator orientation="vertical" className="h-12 ml-10 mr-10 bg-white/25" />
             </div>
           ))}
         </div>
       </div>
       
-      {/* Edge gradients */}
+      {/* Edge gradients - using pure black */}
       <div className="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-black to-transparent z-10"></div>
       <div className="absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-black to-transparent z-10"></div>
       
@@ -165,12 +165,18 @@ export function SignupCarousel() {
         .item-container {
           display: flex;
           align-items: center;
-          gap: 20px;
-          padding: 0 24px;
-          height: 52px;
-          background-color: rgba(255, 255, 255, 0.03);
-          border-radius: 6px;
-          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+          gap: 24px;
+          padding: 0 28px;
+          height: 56px;
+          background-color: black;
+          border-radius: 8px;
+          box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+          transition: all 0.3s ease;
+        }
+        
+        .item-container:hover {
+          background-color: black;
+          box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
         }
         
         .button-wrap {
@@ -189,17 +195,28 @@ export function SignupCarousel() {
         
         .btn-cta {
           font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.05em;
+          font-weight: 800;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
           height: 36px;
-          padding: 0 16px;
+          padding: 0 18px;
+          box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+        }
+        
+        .btn-cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
         }
         
         .button-text {
           position: relative;
           z-index: 2;
           transition: color 0.3s ease;
+          font-weight: 900;
         }
         
         .hover-overlay {
@@ -223,6 +240,16 @@ export function SignupCarousel() {
         @keyframes scroll {
           0% { transform: translateX(0); }
           100% { transform: translateX(calc(-100% / 5)); }
+        }
+        
+        /* Add subtle pulse animation to the icons */
+        @keyframes subtle-pulse {
+          0%, 100% { opacity: 0.9; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.05); }
+        }
+        
+        .carousel-item:hover span svg {
+          animation: subtle-pulse 2s ease infinite;
         }
       `}</style>
     </div>

@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { products } from "@/data/products";
 import { collections } from "@/data/collections";
-import ProductCard from "@/components/product/ProductCard";
+import ShopProductGrid from "@/components/shop/ShopProductGrid";
 import { FilterOptions } from "@/components/shop/ProductFilter";
+import ProductFilter from "@/components/shop/ProductFilter";
 import { Product } from "@/types/product";
 import { ArrowUpDown, Grid, Grid3X3, List, ArrowRight, Sparkles, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -251,10 +252,10 @@ export default function CollectionsPage() {
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="w-full px-6 md:px-8 py-8">
-        <div className="lg:grid lg:grid-cols-5 lg:gap-8">
-          {/* Desktop Sidebar Filter (visible from lg breakpoint) */}
+      {/* Main content container */}
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10">
+          {/* Left column - Filters */}
           <div className="hidden lg:block sticky top-20 h-fit col-span-1">
             <div className="pr-6">
               <div className="flex items-center justify-between mb-6">
@@ -381,10 +382,10 @@ export default function CollectionsPage() {
             </div>
           </div>
 
-          {/* Products Grid Section */}
-          <div className="lg:col-span-4">
-            {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+          {/* Right column - Products */}
+          <div className="lg:col-span-1">
+            {/* Controls and sorting UI */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               <div className="flex items-center text-sm text-gray-700 dark:text-gray-300">
                 <span className="mr-1 font-medium">
                   {filteredProducts.length} 
@@ -440,49 +441,31 @@ export default function CollectionsPage() {
               </div>
             </div>
 
-            {/* Products Grid */}
-            <div className={cn(
-              "grid gap-x-4 gap-y-8 mb-12",
-              viewMode === "grid"
-                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
-                : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5"
-            )}>
-              <AnimatePresence>
-                {sortedProducts.map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ 
-                      duration: 0.3, 
-                      delay: index * 0.05 > 0.6 ? 0.6 : index * 0.05 
-                    }}
-                    layout
-                    className="transform-gpu"
-                  >
-                    <ProductCard product={product} compact={viewMode === "compact"} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+            {/* Product Count */}
+            <div className="my-6">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Showing {sortedProducts.length} products
+              </p>
             </div>
-            
-            {/* No Results */}
-            {filteredProducts.length === 0 && (
-              <div className="flex flex-col items-center justify-center text-center py-12 px-4">
-                <div className="mb-4 bg-gray-100 dark:bg-gray-800 p-4 rounded-full">
-                  <Sparkles size={24} className="text-gray-400" />
-                </div>
-                <h3 className="text-lg font-medium mb-2">No products found</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md">
-                  Try adjusting your filters or search criteria to find what you're looking for.
-                </p>
-                <button 
-                  onClick={resetFilters}
-                  className="bg-black text-white dark:bg-white dark:text-black py-2 px-4 rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
-                >
-                  Clear Filters
-                </button>
+
+            {/* Product Grid */}
+            {sortedProducts.length > 0 ? (
+              <div className="pb-16">
+                <ShopProductGrid 
+                  products={sortedProducts}
+                  gridClassName={cn(
+                    viewMode === "grid" && "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6",
+                    viewMode === "compact" && "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4",
+                    viewMode === "list" && "flex flex-col gap-4"
+                  )}
+                />
+              </div>
+            ) : (
+              <div className="py-20 text-center">
+                <p className="text-xl mb-6">No products match your filters</p>
+                <Button onClick={resetFilters} variant="outline">
+                  Reset all filters
+                </Button>
               </div>
             )}
           </div>

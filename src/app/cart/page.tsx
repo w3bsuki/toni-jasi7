@@ -21,7 +21,7 @@ export default function CartPage() {
       price: 29.99,
       size: "L",
       quantity: 1,
-      image: "/products/hat-placeholder.jpg",
+      image: "/images/hats/placeholder.jpg",
     },
     {
       id: "5",
@@ -29,7 +29,7 @@ export default function CartPage() {
       price: 22.99,
       size: "One Size",
       quantity: 2,
-      image: "/products/hat-placeholder.jpg",
+      image: "/images/hats/placeholder.jpg",
     },
   ]);
 

@@ -61,7 +61,7 @@ export const useCart = create<CartStore>()(
               salePrice: typeof product.salePrice === 'number' ? product.salePrice : null,
               image: Array.isArray(product.images) && product.images.length > 0 
                 ? product.images[0] 
-                : "/products/hat-placeholder.jpg",
+                : "/images/hats/placeholder1.jpg",
               selectedSize,
               quantity
             };
