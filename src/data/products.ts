@@ -82,12 +82,12 @@ export const products: Product[] = [
     category: "straw-hats",
     sizes: ["S", "M", "L"],
     colors: ["natural", "black"],
-    isNew: true,
+    isNew: false,
     isSale: false,
     isFeatured: true,
     inStock: true,
-    rating: 4.4,
-    reviewCount: 42
+    rating: 4.3,
+    reviewCount: 48
   },
   {
     id: "5",
